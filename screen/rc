@@ -1,0 +1,35 @@
+# ~/.screenrc
+# vim: set filetype=screen:
+
+# Caption
+caption always '%{= Gg} %H %{= KW} %-w%{= wW} %n %t %{= KW}%+w %-= %D %{= wW} %m/%d %{= WK} %c ' #kKwW
+
+# Features
+autodetach on
+defnonblock on
+defscrollback 5000
+multiuser off
+shell -$SHELL
+startup_message off
+term $TERM
+vbell off
+
+# Function keys
+termcapinfo xterm* 'k1=\E[11~:k2=\E[12~:k3=\E[13~:k4=\E[14~'
+termcapinfo xterm* 'kh=\E[1~:kI=\E[2~:kD=\E[3~:kH=\E[4~:kP=\E[H:kN=\E[6~'
+
+# Mouse wheel
+termcapinfo xterm* 'ti@:te@'
+
+# Title bar
+termcapinfo xterm* 'hs:ts=\E]0;:fs=\007:ds=\E]0;screen\007'
+hardstatus string '[%H] (%n*%f %t)'
+hardstatus on
+
+# 256 colors
+attrcolor b '.I'
+termcapinfo xterm* 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce on
+
+# Enable agent forwarding on screen reconnects
+#setenv SSH_AUTH_SOCK $HOME/.ssh/agent.socket

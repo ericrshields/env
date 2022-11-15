@@ -1,0 +1,65 @@
+" ~/.vimrc
+" vim: set filetype=vim:
+
+set autoindent
+set shm=at
+set   autowrite
+set nobackup
+set   backspace=2
+set   background=dark
+set nocompatible
+set   cpoptions=aAcj
+set errorbells
+set   esckeys
+set noexpandtab
+set   formatoptions=l
+set   helpheight=0
+set   hidden
+set nohlsearch
+set noicon
+set noignorecase
+set noinsertmode
+set   iskeyword=@,48-57,_,192-255,@-@
+set   nojoinspaces
+set   laststatus=1
+set   lazyredraw
+set   magic
+set   modeline
+set   modelines=1
+" changebelow to 'set number' to show line numbers
+set number
+set   path=.,,~/.P/vim,~/.P/vim/syntax,~/.P/vim/source,$VIM/syntax/
+set   pastetoggle=<f11>
+set   report=3
+set   ruler
+set   shiftwidth=4
+set   shortmess=at
+set   showcmd
+set   showmatch
+set   showmode
+set   suffixes=.aux,.bak,.dvi,.gz,.idx,.log,.ps,.swp,.tar
+set nostartofline
+set   splitbelow
+set rulerformat=%30(%3*%1*%m\%=\ %5*<%4*%1.5l\,%c%V\%5*>%=\ %2*%3P\%*%)
+hi User1 ctermfg=red guifg=red2
+hi    User2 ctermfg=green guifg=green3
+hi    User3 ctermfg=blue guifg=blue1
+hi    User4 ctermfg=yellow guifg=yellow3
+hi    User5 ctermfg=gray guifg=gray
+set   tabstop=4
+if &term=="xterm"
+  set t_Co=8
+  set t_AB=[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm
+  set t_AF=[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm
+endif
+set notextmode
+set   textwidth=0
+set ttyfast
+set nottybuiltin
+set   ttyscroll=0
+set   viminfo=%,'50,\"100,:100,n~/.viminfo
+set   t_vb=
+set   whichwrap=<,>,h,l
+set   wildchar=<TAB>
+set   wrapmargin=0
+set nowritebackup

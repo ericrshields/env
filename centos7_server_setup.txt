@@ -1,0 +1,99 @@
+To set up CentOs:
+	Obtain the latest "minimal" ISO from centos.org
+	Use Rufus to create a bootable USB
+	Make sure to turn on network config and set up a user.  Additional packages selected don't seem to accomplish anything
+	sudo yum install epel-release && sudo yum update
+	sudo yum install vim tree git httpd php php-mcrypt unzip ack screen
+	Install env repo (git@github.com:/coldcandor/env.git)
+		cd env && perl install.pl (follow the prompts)
+		restart terminal
+		
+To set up webserver:
+	sudo mkdir /public_html && sudo chown eshields:eshields /public_html
+	git clone git@github.com:/coldcandor/website.git /public_html/www.coldcandor.com
+	git clone git@github.com:/coldcandor/website.git /public_html/beta.coldcandor.com
+	Switch the beta repo to the beta branch, tracking origin/beta
+	run "apache_config"
+	sudo systemctl enable httpd
+	Disable or update iptables to allow http access
+		sudo yum remove iptables
+		sudo yum install NetworkManager (Because it apparently gets uninstalled as a dependency and I want the nmcli command - may no longer be needed)
+	Disable SELinux or update extended permissions on public_html
+		/etc/sysconfig/selinux - change "enforcing" to "permissive"
+	Confirm DDNS has updated.  DNS is hosted at namecheap.com (if needed, domain is hosted via godaddy)
+	Confirm Port Forwarding is set up correctly on router (server should be forced to 192.168.1.3)
+		Most important is HTTP Server/80,8080 and SSH/22, but also FTP Server/21 and IRC/6666
+	Turn on PHP errors in php.ini
+	All webpages, except possibly gallery, should now be working
+
+Setup Mysql:
+	sudo yum install mariadb mariadb-server php-mysql
+	sudo mysql_secure_installation
+	sudo systemctl start mariadb
+	sudo systemctl enable mariadb
+
+	mysql -u root -p
+	GRANT ALL ON *.* TO 'eshields'@'%' IDENTIFIED BY '<password>' WITH GRANT OPTION;
+	FLUSH PRIVILEGES;
+
+Setup IRC:
+	Download ircd-hybrid and anope into ~/1
+	extract both
+	Move extracted files to /etc/ircd
+	sudo yum install gcc
+	sudo ./configure --prefix="/etc/ircd/"
+	sudo make
+	sudo make install
+	copy ircd.conf to /etc/ircd
+	create irc user:
+		/etc/passwd: (vipw)
+			irc:x:60:60:IRC Server:/etc/ircd:/sbin/nologin
+		/etc/group: (vigr)
+			irc:x:60:irc
+		/etc/shadow: (vipw -s)
+			irc:!!:16596::::::
+	make directory /var/log/ircd and chown it to irc
+
+	Setup a service and make it load on boot:
+		sudo cp ~/env/not_symlinked/irc/ircd.service /usr/lib/systemd/system/
+		sudo systemctl daemon-reload
+		sudo systemctl enable ircd
+	Or, start it manually (as user 'irc'):
+		sudo -u irc /etc/ircd/bin/ircd -configfile /etc/ircd/ircd.conf -logfile /var/log/ircd/ircd.log
+
+Magento-default setup:
+	copy and extract magento archive to /public_html/work/magento-default
+	copy and extract sample data anywhere, then copy it's media and skin folders to magento-default
+	sudo yum install php-xml php-gd
+	create database magento
+	create mysql user:
+		GRANT SELECT,INSERT,UPDATE,DELETE ON magento.* TO 'magento'@'localhost' IDENTIFIED BY 'magento';
+		FLUSH PRIVILEGES;
+	load sample data
+		SOURCE <wherever the .sql file in the sample data folder resides>;
+	run default_permissions on magento-default folder
+	If getting non-permissions-based errors, check that mod_rewrite is enabled for apache
+	ensure apache user has access to magento directory
+	Add URL to hosts file on the machine being used to view the portal
+	Load the core URL and Follow directions.  Make sure to select "use rewrites" and "skip URL validation"
+	Revert folder permissions, if needed
+
+	sudo curl -LsS http://files.magerun.net/n98-magerun-latest.phar -o /usr/local/bin/magerun
+	sudo chmod +x /usr/local/bin/magerun
+	(From magento base directory, follow prompts)  magerun admin:user:create
+
+Other odds and ends:
+	Setup Composer:
+		(Note that this is an insecure install method and should only be done with implicit trust of the website)
+		sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin
+		sudo mv /usr/local/bin/composer.phar /usr/local/bin/composer
+		sudo yum install phpunit
+
+	Setup Node.js (and grunt):
+		sudo yum install nodejs nodejs-grunt
+		(That was easy)
+
+	Setup Symfony:
+		(Same note as per composer)
+		sudo curl -LsS http://symfony.com/installer -o /usr/local/bin/symfony
+		sudo chmod +x /usr/local/bin/symfony

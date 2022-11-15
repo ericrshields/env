@@ -1,0 +1,7 @@
+BoldAsFont=no
+CursorType=block
+Font=Consolas
+FontHeight=8
+Term=xterm-256color
+Scrollbar=none
+Transparency=off

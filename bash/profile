@@ -1,0 +1,22 @@
+# ~/.bash_profile
+# Things that should ONLY be executed inside a login shell and not in interactive
+# but not login shells (like sftp) should go here
+
+# bashrc
+[[ -f /etc/bash.bashrc ]] && . /etc/bash.bashrc
+[[ -f /etc/bashrc ]] && . /etc/bashrc
+[[ -f ~/.bashrc ]] && . ~/.bashrc
+
+# bin
+[[ -d /usr/local/sbin ]] && export PATH=/usr/local/sbin:$PATH
+[[ -d /usr/local/bin ]] && export PATH=/usr/local/bin:$PATH
+[[ -d ~/bin ]] && export PATH=~/bin:$PATH
+
+# Move auth socket to known place so SSH forwarding works in screen after connection interrupt
+# @author http://superuser.com/a/424588/541446
+if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
+    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/agent.socket
+fi
+export SSH_AUTH_SOCK=~/.ssh/agent.socket
+# If screen session exists and there is an interactive terminal, Run screen (first detaching if necessary - attach to first session if multiple)
+if [ -z "$STY" ] && [[ -t 0 || -p /dev/stdin ]]; then screen -d -RR; fi

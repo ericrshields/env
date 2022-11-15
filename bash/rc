@@ -1,0 +1,190 @@
+#!/bin/sh
+
+# Source global definitions
+[[ -f /etc/bashrc ]] && . /etc/bashrc
+[[ -f /etc/init.d/functions ]] && . /etc/init.d/functions
+
+# Preferences
+# @author smoeller
+export EDITOR='vim -O'
+export HISTSIZE=10000
+export HISTTIMEFORMAT='%F %T '
+export LESSHISTFILE=/dev/null
+shopt -s cdspell
+#shopt -s globstar
+
+# Prompt
+# @author mcanz
+export PS0='\[\e[0;36m\]\t\[\e[0m\] \[\e[0;33m\]\u@\[\e[0m\]\[\e[0;31m\]\h\[\e[0m\] {\[\e[1;33m\]\w\[\e[0m\]}\[\e[0;36m\]%{(%b\[\e[1;37m\]%m\[\e[0;36m\])[%u%c%f%t\[\e[0;36m\]]%}\[\e[0m\]$ '
+export PROMPT_COMMAND=$PROMPT_COMMAND';export PS1=$(gitprompt.pl statuscount=1 u=%[%e[31m%] c=%[%e[32m%] f=%[%e[1\;37m%])'
+
+# Utilities
+[[ -f ~/bin/git-completion.sh ]] && . ~/bin/git-completion.sh && complete -o default -o nospace -F _git g gb
+[[ -f ~/bin/up.sh ]] && . ~/bin/up.sh && complete -o bashdefault -o default -o filenames -o nospace -F _up cup sup
+
+# Aliases
+	# Git aliases
+	# @author smoeller
+	alias g='git'
+	alias gb='bulk -1 git'
+	# @author mcanz
+	alias gs="g status"
+	alias gco="g checkout"
+	alias gci="g commit"
+	alias glg="g log -n 20 --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %an' --abbrev-commit --date=relative"
+	# @author dellis
+	alias gdw="g diff --word-diff=color --word-diff-regex=."
+	# @author eshields
+	alias gl="g log -n 20 --no-merges --abbrev-commit --abbrev=9"
+	alias gll="g log --pretty=full"
+	alias gu="gb fetch origin; gb pull"
+	alias gucd="gb fetch cd-projects; gb pull"
+	alias apache_config="sudo cp ~/env/not_symlinked/httpd/sites/* /etc/httpd/conf.d/ && sudo cp ~/env/not_symlinked/httpd/httpd.conf /etc/httpd/conf/httpd.conf && sudo systemctl restart httpd"
+
+	# Sets all directories (and files with execute bit originally set) to 755 and all other files to 644
+	# author http://superuser.com/a/91966
+	alias default_permissions="sudo chmod -R u+rwX,go+rX,go-w"
+
+	# Common aliases
+	# @author smoeller
+	alias ha='history | ack'
+	alias l='ls -AFh --color'
+	alias ll='l -l'
+	alias lx='ll -XB'
+	alias mkdir='mkdir -p'
+	alias pa='ps aux | ack'
+	alias tree='tree -CF'
+	alias vi='vim'
+	# @author eshields
+	alias rm='rm -r'
+	alias sudo='sudo '
+
+# Functions
+	# From smoeller
+#	cup() { __upgen "$1" && local a="${__UPREPLY[0]}${__UPREPLY[1]}" && __upgen "$2" && local b="${__UPREPLY[0]}${__UPREPLY[1]}" && cp "${a:-$1}" "${b:-$2}"; }
+#	sup() { __upgen "$1" && local a="${__UPREPLY[0]}${__UPREPLY[1]}" && sv "${a:-$1}"; }
+	ta()  { tree -a -I '*.git|*.swp' -L ${@:-'100'}; }
+
+	# Search for a directory (fd) or file (ff) matching a given regex
+	# Allows a second parameter for defining options for find
+	# @author smoeller/eshields
+	fd() { find $2 . ! -readable -prune -o -regextype posix-extended -iregex ".*($1)[^/]*" -type d -print | grep -v '\.[git|swp]$'; }
+	ff() { find $2 . ! -readable -prune -o -regextype posix-extended -iregex ".*($1)[^/]*" \( -type f -or -type l \) -print | grep -v '\.swp$'; }
+
+	# Move a file and create the new path if it doesn't already exist
+	# @TODO Needs a fix for the case of renaming a directory - it places the existing one into the newly-named one
+	# @param $1 file to move
+	# @param $2 destination
+	# @author Stackoverflow/eshields
+#	mv()
+#	{
+#		DIR=`echo $2 | sed -e 's_/[^/]*$__'`;
+#		mkdir -p $DIR;
+#		/bin/mv $1 $DIR;
+#	}
+#	cp()
+#	{
+#		DIR=`echo $2 | sed -e 's_/[^/]*$__'`;
+#		mkdir -p $DIR;
+#		/bin/cp -r $1 $DIR;
+#	}
+
+	# Git log search
+	# Based on the following being set in .gitconfig:
+	# [format]
+	#		pretty = format:%h %Cblue %ci %Cgreen %an %Creset %s
+	#
+	# @author eshields
+	logs()
+	{
+		git log --no-merges --abbrev-commit --abbrev=9 | grep "$1" --color=always;
+	}
+
+	# Delete a git tag, locally and on origin
+	# @author eshields
+	remove_tag()
+	{
+		git tag -d $1;
+		git push origin :refs/tags/$1;
+	}
+
+	# Start/Stop mysql instances
+	# @author ezarko/eshields
+	sqltoggle()
+	{
+		for i in /etc/init.d/mysqld-*; do sudo $i $1; done
+	}
+
+	# Use to remove files matching $1 from the search for $2 in folders designated by $3
+	# Great for things like avoiding matching .packed files in agdistis
+	# @author eshields/smoeller
+	ackfilter()
+	{
+		ack -G "$1" --invert-file-match "$2" $3
+	}
+
+	# Use to replace all occurances of $1 with $2 in the current working directory, recursively.
+	# Uses '@' as a regex delimiter, so searches including that symbol won't work.
+	# @param $1 String to search for
+	# @param $2 String to replace with
+	# @author eshields
+	replace()
+	{
+		ack -l $1 | xargs -n 1 sed -i s@$1@$2@g
+	}
+
+	# Git-less method of determining current branch for all repos (uses .gitpgd exclusions)
+	# Combines all repos on a given branch into a single line of output
+	# @author ewastl
+	function branches { perl -e 'foreach(grep{/\S/}split(/\n/,`git pgd`)){die if!/\/([\w\-]+)$/;$r=$1;open(HEAD,"$_/.git/HEAD");chomp($h=<HEAD>);$h=$h=~/^ref\:\s*refs\/heads\/([\w\-]+)$/?("\e[".($1 eq"master"?"1;31":$1=~/^(m\d+)$/?"31":"33")."m$1\e[0m"):$h=~/^([0-9a-f]{6})[0-9a-f]{34}$/?"\e[36m$1\e[0m":$h;push @{$h{$h}},$r;close HEAD}foreach(sort{lc$a cmp lc$b}keys%h){print "$_\t".join(" ",sort{lc$a cmp lc$b}@{$h{$_}})."\n"}'; }
+
+
+
+	# Remove local and publish/ branches that are fully merged to master
+	# @author http://devblog.springest.com/a-script-to-remove-old-git-branches (modified)
+	clean_branches()
+	{
+		git checkout master
+		git fetch publish
+		git fetch origin
+
+		# Remove branches for which the remote tracking branch no longer exists
+		git remote prune publish
+		git remote prune origin
+
+		# Remove local fully merged branches
+		git branch --no-color --merged origin/master | grep -v 'master$' | xargs git branch -d
+
+		# Show remote fully merged branches
+		echo "The following remote branches are fully merged and will be removed:"
+		git branch -r --merged origin/master | grep 'publish' | sed 's/ *publish\///'
+
+		read -p "Continue (y/n)? "
+		if [ "$REPLY" == "y" ]
+		then
+			 # Remove remote fully merged branches
+			 git branch -r --no-color --merged origin/master | grep 'publish' | sed 's/ *publish\///' | xargs -I% git push publish :%
+			 echo "Done!"
+		fi
+	}
+
+	# Locate the line number and source file for a user defined shell function
+	# @author HairOfTheDog http://superuser.com/a/229038
+	functions() {
+		shopt -s extdebug
+		declare -F $1
+		shopt -u extdebug
+	}
+
+	# Function to save an existing function to a new name
+	save_func() {
+		local ORIG_FUNC=$(declare -f $1)
+		local NEWNAME_FUNC="$2${ORIG_FUNC#$1}"
+		eval "$NEWNAME_FUNC"
+	}
+
+# Environemnt-based settings
+[[ -f ~/.bash_local ]] && . ~/.bash_local
+
+# Make home bin the highest override
+export PATH="/home/${USER}/bin:"$PATH

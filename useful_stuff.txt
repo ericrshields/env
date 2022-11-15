@@ -1,0 +1,73 @@
+// Debug startup scripts
+ssh <hostname> "bash -x -l -i"
+
+// Remove any symlinks in this folder that contain ~
+// Useful for, say, cleaning up after env install script testing without removing the original file backup (unless it was a symlink)
+find . -maxdepth 1 -type l -iname "*~*" | xargs rm
+
+// List open ports
+netstat -lntp
+
+// Run composer update with no memory restriction
+php -d memory_limit=-1 /usr/bin/composer update
+
+// Outlook set messages to read as you click them in preview
+Options -> Advanced -> Outlook Panes (group) -> Reading Pane button -> "Mark messages as read in the preview pane"
+
+// Remove trailing whitespace from all files that match the "find" query (in this case *.php)
+find . -type f -name "*.php" -exec sed -i 's/\s\([\r\n]\)/\1/g' {} \;
+
+
+// This one is definitely a tempate, change as needed.
+// For each of these repos, search git logs for commit messages with "hackathon", ignore merges, include stats (like you see when committing changes), force stats to look for file moves, output the results with only 9-character hashes, in reverse order, and pipe the results to less, with bash syntax highlighting turned on
+// Use --numstat if you want to avoid filename truncations
+// Use --stat=200 to set the width of what git thinks the console is.  Sadly this only affects +/- counts, not filenames
+gb -i <redacted_repos> log --no-merges --abbrev-commit --abbrev=9 --grep=Hackathon --stat -M --reverse | less -R
+
+// Git log including file change listing (With forced file move detection)
+git log --stat -M
+
+// Review all changes, but ignoring Deleted and Added files, based on a source
+// Substitue with =A for created, =D for deleted, and a few others (check man page)
+// Add --name-only for things like =D when you don't care about the file content
+git diff --diff-filter=M origin/master...
+
+// loop over a series of things that end in ~HEAD and rename them to the same thing without ~HEAD
+for i in *~HEAD; do mv $i ${i/~HEAD/}; done
+
+// Perform mass git removal based on list of unmerged files (probably not often useful without modification)
+g diff --diff-filter=U | sed 's/* Unmerged path //' | xargs git rm
+
+// Shannon's jsfiddle for CSS3 buttons
+http://jsfiddle.net/sirshannon/YtTXC/
+
+// Console logging as a group
+console.groupCollapsed(filter);console.dir(filters);console.groupEnd();
+
+// Processes running from this user
+ps auxww | grep $USER
+
+// Convert an array-like object (such as function arguments) into an array
+Array.prototype.slice.call(arguments);
+
+// JS performance if/else vs switch vs object lookup vs regex
+http://jsperf.com/guard-vs-switch/3
+
+// FirePHP console logging
+$fp=FirePHP::getInstance();$fp->log($zone, 'Zone: ');
+
+// git checkout to a date
+git checkout `git rev-list -n 1 --before="2009-07-27 13:37" master`
+
+// Place in a PHP file, then tail the file below to see output
+#debug(2): file_put_contents('/tmp/error_debug', "In Save\n\n", FILE_APPEND);
+#debug(2): file_put_contents('/tmp/error_debug', print_r($error_data, true), FILE_APPEND);
+
+// Find out what a keycode is
+$(window).delegate('*', 'keydown', function (event) {
+    console.log(event.keyCode);
+});
+
+Log file locations (CentOS 7)
+/etc/httpd/logs/  (apache)
+/var/log/messages (system messages)

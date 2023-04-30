@@ -48,6 +48,7 @@ push @link_source,
 
 	"$base/$repo_dir/git/config",
 	"$base/$repo_dir/git/ignore",
+	"$base/$repo_dir/git/attributes",
 	"$base/$repo_dir/bash/rc",
 	"$base/$repo_dir/bash/local/amazon", # TODO: Fix this to pick one based on CLI option
 	"$base/$repo_dir/bash/profile",
@@ -74,6 +75,7 @@ push @link_dest,
 
 	"$home/.gitconfig",
 	"$home/.gitignore",
+	"$home/.gitattributes",
 	"$home/.bashrc",
 	"$home/.bash_local",
 	"$home/.bash_profile",
@@ -82,7 +84,7 @@ push @link_dest,
 	"$home/.screenrc",
 	"$home/.vimrc",
 	"$home/.vnc/xstartup",
-	"$home/.IntelliJIdea2018.2/config/settings.jar", # TODO:  Should probably prompt for Intellij folder version
+	"$home/.IntelliJIdea2022.3/config/settings.jar", # TODO: Should probably prompt for Intellij folder version
 
 	"$bin/git-completion.sh",
 	"$bin/tree",
@@ -106,7 +108,7 @@ if (!-e "$base/$repo_dir") {
 &createDir($bin);
 &createDir("$home/.ssh");
 &createDir("$home/.vnc");
-&createDir("$home/.IntelliJIdea2018.2/config");
+&createDir("$home/.IntelliJIdea2022.3/config"); # TODO: Update based on CLI option
 
 # Clone subrepos
 for my $i (@sub_repos) {
@@ -204,4 +206,3 @@ sub promptUser {
 		return $_;
 	}
 }
-

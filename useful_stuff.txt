@@ -71,3 +71,10 @@ $(window).delegate('*', 'keydown', function (event) {
 Log file locations (CentOS 7)
 /etc/httpd/logs/  (apache)
 /var/log/messages (system messages)
+
+// CSS to invert a graphic's color
+// Author: https://www.sitepoint.com/css-printer-friendly-pages/
+/* print.css */
+img.dark {
+  filter: invert(100%) hue-rotate(180deg) brightness(120%) contrast(150%);
+}

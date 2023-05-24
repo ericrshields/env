@@ -35,7 +35,10 @@ push @sub_repos,
 	"https://github.com/shannonmoeller/bulk.git",
 	"https://github.com/vim-scripts/Colortest.git",
 	"https://github.com/coldcandor/extract.git",
-	"https://github.com/somegithubuser/env.git";
+	"https://github.com/ericrshields/gitprompt.git"
+#	"https://github.com/synacor/gitprompt.git"  //backup repo
+#	"https://github.com/somegithubuser/env.git";  //backup repo
+#	"https://github.com/mikecanz/env.git";  //Original source
 
 # Symlink sources
 push @link_source,
@@ -44,7 +47,7 @@ push @link_source,
 	"$base/$sub_repo_dir/bulk/bulk.sh",
 	"$base/$sub_repo_dir/Colortest/colortest",
 	"$base/$sub_repo_dir/extract/extract.bash",
-	"$base/$sub_repo_dir/env/gitprompt.pl",
+	"$base/$sub_repo_dir/gitprompt/gitprompt.pl"
 
 	"$base/$repo_dir/git/config",
 	"$base/$repo_dir/git/ignore",

@@ -1,3 +1,8 @@
+// Start SSH agent and add key
+// Note: key must be in openssh format
+eval `ssh-agent -s`
+ssh-add ~/.ssh/<key filename>
+
 // Debug startup scripts
 ssh <hostname> "bash -x -l -i"
 
@@ -16,7 +21,6 @@ Options -> Advanced -> Outlook Panes (group) -> Reading Pane button -> "Mark mes
 
 // Remove trailing whitespace from all files that match the "find" query (in this case *.php)
 find . -type f -name "*.php" -exec sed -i 's/\s\([\r\n]\)/\1/g' {} \;
-
 
 // This one is definitely a tempate, change as needed.
 // For each of these repos, search git logs for commit messages with "hackathon", ignore merges, include stats (like you see when committing changes), force stats to look for file moves, output the results with only 9-character hashes, in reverse order, and pipe the results to less, with bash syntax highlighting turned on

@@ -1,0 +1,65 @@
+Setup WSL and install Ubuntu
+    Guide: https://learn.microsoft.com/en-us/windows/wsl/install
+    Open PowerShell
+    Enable WSL, if needed: "dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart"
+    Install default Ubuntu: "wsl --install -d Ubuntu"
+    Restart computer and let the install finish (Will take around 10 minutes)
+    Create username and password (pick something you can type when needed for sudo)
+    "sudo apt update" (Updates package lists - may take a while)
+    "sudo apt full-upgrade"
+
+Install node, nvm, and npm
+    Navigate to project folder
+    Should not need to manually install nodejs and npm, as they will be old versions.  If using nvm directly works, delete these 2 lines
+    "sudo apt install nodejs"
+    "sudo apt install npm"
+    Install nvm via curl command: https://github.com/nvm-sh/nvm/blob/master/README.md#installing-and-updating
+    "nvm install <version>" (This will install both nodejs and npm)
+
+Install web server
+    "npm install http-server"
+
+Install React and Next
+    "npm install react react-dom react-router next"
+    Add the following to package.json to run the development server at localhost:3000
+        "scripts": {
+            "dev": "next dev"
+        }
+
+Install testing
+    https://testing-library.com/docs/react-testing-library/intro/
+    "npm install --save-dev @testing-library/react"
+    https://jestjs.io/docs/getting-started
+    "npm install --save-dev jest"
+
+Install middleware
+    https://gruntjs.com/installing-grunt
+    "npm install --save-dev grunt"
+    https://babeljs.io/setup#installation
+    "npm install --save-dev grunt-babel @babel/core @babel/preset-env"
+    https://webpack.js.org/guides/installation/
+    "npm install --save-dev webpack"
+    https://eslint.org/docs/latest/use/getting-started
+    "npm init @eslint/config" (will ask many questions)
+    "npm init @eslint/config -- --config semistandard"
+    "npm install --save-dev eslint-config-react-app"
+
+Install TypeScript
+    https://www.typescriptlang.org/download
+    "npm install typescript --save-dev"
+    "npx tsc --init"
+
+Install Database
+    "sudo apt install postgresql"
+
+// Set up SSH for use with <Ubuntu> Windows Subsystem for Linux (WSL)
+// Note: Can also run "sudo su" to avoid individual sudo commands
+// Source: https://www.youtube.com/watch?v=7wVX-9XkasM
+sudo apt-get install openssh-server
+sudo vi /etc/ssh/sshd_config
+    // Change "PasswordAuthentication" to "yes"
+    // Add "AllowUsers <username>" to the end of the file
+sudo service ssh start
+sudo visudo
+    // Add "%sudo ALL=NOPASSWD: /usr/sbin/sshd" after "%sudo ALL=(ALL:ALL) ALL"
+// PuTTY to "localhost" via SSH

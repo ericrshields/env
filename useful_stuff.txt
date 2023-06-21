@@ -1,7 +1,20 @@
-// Start SSH agent and add key
-// Note: key must be in openssh format
-eval `ssh-agent -s`
-ssh-add ~/.ssh/<key filename>
+// Load SSH key in Linux
+// Note: Must be in .osh format
+// Author: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/<key_file>
+
+// Example of useMemo typing to create a DOM/Browser object fallback
+const _localStorage = useMemo<Storage>(() => {
+    return typeof window !== 'undefined' ? localStorage : {
+        length: 0,
+        clear() {},
+        getItem(key: string): string | null { return ""; },
+        key(index: number): string | null { return ""; },
+        removeItem(key: string) {},
+        setItem(key: string, value: string) {},
+    }
+}, []);
 
 // Debug startup scripts
 ssh <hostname> "bash -x -l -i"

@@ -63,6 +63,7 @@ fi
 	# @author eshields
 	alias rm='rm -r'
 	alias sudo='sudo '
+	alias addssh='eval "$(ssh-agent -s)" && ssh-add ~/.ssh/rsa-website-2023.osh'
 
 # Functions
 	# From smoeller

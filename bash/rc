@@ -45,6 +45,7 @@ fi
 	alias gu="gb fetch origin; gb pull"
 	alias gucd="gb fetch cd-projects; gb pull"
 	alias apache_config="sudo cp ~/env/not_symlinked/httpd/sites/* /etc/httpd/conf.d/ && sudo cp ~/env/not_symlinked/httpd/httpd.conf /etc/httpd/conf/httpd.conf && sudo systemctl restart httpd"
+	alias addkey="eval \"$(ssh-agent -s)\" && ssh-add "
 
 	# Sets all directories (and files with execute bit originally set) to 755 and all other files to 644
 	# author http://superuser.com/a/91966

@@ -1,3 +1,7 @@
+// Create a Windows desktop shortcut to a webpage that looks and acts like a native app displaying that page
+// Source: https://superuser.com/questions/459775/how-can-i-launch-a-browser-with-no-window-frame-or-tabs-address-bar
+"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe" --kiosk --app=https://app.todoist.com/app/filter/work-sprint-2349396680
+
 // Load SSH key in Linux
 // Note: Must be in .osh format
 // Author: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent

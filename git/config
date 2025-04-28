@@ -1,6 +1,6 @@
 [user]
 	name = Eric Shields
-	email = ershield@coldcandor.com
+	email = me@ericrshields.com
 [branch]
 	autosetupmerge = true
 [color]
@@ -51,3 +51,5 @@
 	enabled = true
 [init]
 	defaultBranch = main
+[pull]
+	rebase = false

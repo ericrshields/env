@@ -59,6 +59,7 @@ push @link_source,
 	"$base/$repo_dir/bash/hush",
 	"$base/$repo_dir/screen/rc",
 	"$base/$repo_dir/vim/rc",
+	"$base/$repo_dir/nvm/rc",
 	"$base/$repo_dir/vnc/xstartup",
 	"$base/$repo_dir/intellij/settings.jar",
 
@@ -86,8 +87,9 @@ push @link_dest,
 	"$home/.hushlogin",
 	"$home/.screenrc",
 	"$home/.vimrc",
+	"$home/.nvmrc",
 	"$home/.vnc/xstartup",
-	"$home/.IntelliJIdea2022.3/config/settings.jar", # TODO: Should probably prompt for Intellij folder version
+#	"$home/.IntelliJIdea2022.3/config/settings.jar", # Currently using Intellij acct to store settings
 
 	"$bin/git-completion.sh",
 	"$bin/tree",
@@ -111,7 +113,7 @@ if (!-e "$base/$repo_dir") {
 &createDir($bin);
 &createDir("$home/.ssh");
 &createDir("$home/.vnc");
-&createDir("$home/.IntelliJIdea2022.3/config"); # TODO: Update based on CLI option
+#&createDir("$home/.IntelliJIdea2022.3/config");
 
 # Clone subrepos
 for my $i (@sub_repos) {

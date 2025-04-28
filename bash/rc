@@ -64,7 +64,7 @@ fi
 	# @author eshields
 	alias rm='rm -r'
 	alias sudo='sudo '
-	alias addssh='eval "$(ssh-agent -s)" && ssh-add ~/.ssh/rsa-website-2023.osh'
+	alias addssh='eval "$(ssh-agent -s)" && ssh-add '
 
 # Functions
 	# From smoeller
@@ -147,32 +147,19 @@ fi
 
 
 
-	# Remove local and publish/ branches that are fully merged to master
+	# Remove local and publish/ branches that are fully merged to main
 	# @author http://devblog.springest.com/a-script-to-remove-old-git-branches (modified)
 	clean_branches()
 	{
-		git checkout master
-		git fetch publish
+		git checkout main
 		git fetch origin
 
 		# Remove branches for which the remote tracking branch no longer exists
-		git remote prune publish
 		git remote prune origin
 
 		# Remove local fully merged branches
-		git branch --no-color --merged origin/master | grep -v 'master$' | xargs git branch -d
-
-		# Show remote fully merged branches
-		echo "The following remote branches are fully merged and will be removed:"
-		git branch -r --merged origin/master | grep 'publish' | sed 's/ *publish\///'
-
-		read -p "Continue (y/n)? "
-		if [ "$REPLY" == "y" ]
-		then
-			 # Remove remote fully merged branches
-			 git branch -r --no-color --merged origin/master | grep 'publish' | sed 's/ *publish\///' | xargs -I% git push publish :%
-			 echo "Done!"
-		fi
+		# TODO: Pipe list from prune into this, as github workflow rebases everything, breaking -d
+		git branch --no-color --merged origin/main | xargs git branch -d
 	}
 
 	# Locate the line number and source file for a user defined shell function

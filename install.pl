@@ -35,7 +35,7 @@ push @sub_repos,
 	"https://github.com/shannonmoeller/bulk.git",
 	"https://github.com/vim-scripts/Colortest.git",
 	"https://github.com/coldcandor/extract.git",
-	"https://github.com/ericrshields/gitprompt.git"
+	"https://github.com/ericrshields/gitprompt.git";
 #	"https://github.com/synacor/gitprompt.git"  //backup repo
 #	"https://github.com/somegithubuser/env.git";  //backup repo
 #	"https://github.com/mikecanz/env.git";  //Original source
@@ -47,13 +47,13 @@ push @link_source,
 	"$base/$sub_repo_dir/bulk/bulk.sh",
 	"$base/$sub_repo_dir/Colortest/colortest",
 	"$base/$sub_repo_dir/extract/extract.bash",
-	"$base/$sub_repo_dir/gitprompt/gitprompt.pl"
+	"$base/$sub_repo_dir/gitprompt/gitprompt.pl",
 
 	"$base/$repo_dir/git/config",
 	"$base/$repo_dir/git/ignore",
 	"$base/$repo_dir/git/attributes",
 	"$base/$repo_dir/bash/rc",
-	"$base/$repo_dir/bash/local/amazon", # TODO: Fix this to pick one based on CLI option
+#	"$base/$repo_dir/bash/local/amazon", # TODO: Fix this to pick one based on CLI option
 	"$base/$repo_dir/bash/profile",
 	"$base/$repo_dir/bash/dir_colors",
 	"$base/$repo_dir/bash/hush",
@@ -61,7 +61,7 @@ push @link_source,
 	"$base/$repo_dir/vim/rc",
 	"$base/$repo_dir/nvm/rc",
 	"$base/$repo_dir/vnc/xstartup",
-	"$base/$repo_dir/intellij/settings.jar",
+#	"$base/$repo_dir/intellij/settings.jar",
 
 	"$base/$repo_dir/git/completion.bash",
 	"$base/$repo_dir/tree/tree.sh",
@@ -81,7 +81,7 @@ push @link_dest,
 	"$home/.gitignore",
 	"$home/.gitattributes",
 	"$home/.bashrc",
-	"$home/.bash_local",
+#	"$home/.bash_local",
 	"$home/.bash_profile",
 	"$home/.dir_colors",
 	"$home/.hushlogin",
@@ -122,6 +122,12 @@ for my $i (@sub_repos) {
 		system("cd $base/$sub_repo_dir && git clone $i") == 0
 			or print STDERR "Attempt to clone $i failed: $?\n";
 	}
+}
+
+# Add this before the symlink creation loop
+if (scalar(@link_source) != scalar(@link_dest)) {
+    die "Error: Number of source links (" . scalar(@link_source) . 
+        ") does not match number of destination links (" . scalar(@link_dest) . ")\n";
 }
 
 # Create symlinks

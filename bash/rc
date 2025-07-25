@@ -16,7 +16,10 @@ shopt -s cdspell
 # Prompt
 # Assumes that 'gitprompt.pl' in the $PATH
 # @author mcanz; ewastl; and others
+# Define the prompt format but don't set it as PS0
 export GIT_PROMPT='\[\e[0;36m\]\t\[\e[0m\] \[\e[0;33m\]\u@\[\e[0m\]\[\e[0;31m\]\h\[\e[0m\] {\[\e[1;33m\]\w\[\e[0m\]}\[\e[0;36m\]%{(%b\[\e[1;37m\]%m\[\e[0;36m\])[%u%c%f%t\[\e[0;36m\]]%}\[\e[0m\]$ '
+
+# Use GIT_PROMPT_FORMAT instead of PS0
 if [ -z "${PROMPT_COMMAND}" ]; then
   export PROMPT_COMMAND='export PS1=$(gitprompt.pl statuscount=1 u=%[%e[31m%] c=%[%e[32m%] f=%[%e[1\;37m%])'
 else
@@ -144,8 +147,6 @@ fi
 	# Combines all repos on a given branch into a single line of output
 	# @author ewastl
 	function branches { perl -e 'foreach(grep{/\S/}split(/\n/,`git pgd`)){die if!/\/([\w\-]+)$/;$r=$1;open(HEAD,"$_/.git/HEAD");chomp($h=<HEAD>);$h=$h=~/^ref\:\s*refs\/heads\/([\w\-]+)$/?("\e[".($1 eq"master"?"1;31":$1=~/^(m\d+)$/?"31":"33")."m$1\e[0m"):$h=~/^([0-9a-f]{6})[0-9a-f]{34}$/?"\e[36m$1\e[0m":$h;push @{$h{$h}},$r;close HEAD}foreach(sort{lc$a cmp lc$b}keys%h){print "$_\t".join(" ",sort{lc$a cmp lc$b}@{$h{$_}})."\n"}'; }
-
-
 
 	# Remove local and publish/ branches that are fully merged to main
 	# @author http://devblog.springest.com/a-script-to-remove-old-git-branches (modified)

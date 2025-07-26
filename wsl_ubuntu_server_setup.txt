@@ -8,6 +8,21 @@ Setup WSL and install Ubuntu
     "sudo apt update" (Updates package lists - may take a while)
     "sudo apt full-upgrade"
 
+Set up SSH
+    Copy SSH key to ~/.ssh/
+    Start ssh process: eval $(ssh-agent)
+    Add GitHub ey to ring: ssh-add ~/.ssh/<github_key>.osh
+
+Setup env
+    If using Powershell instead of Putty, copy settings to C:\Users\<USER>\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+    "sudo apt install screen"
+    "git clone git@github.com:ericrshields/env.git ~/env"
+    "perl ~/env/install.pl"
+    "source ~/.bashrc"
+    Close terminal and reopen
+    "mkdir ~/projects"
+    Clone desired repos into projects dir (don't forget to re-add the ssh key to the ring)
+
 Install node, nvm, and npm
     Navigate to project folder
     Should not need to manually install nodejs and npm, as they will be old versions.  If using nvm directly works, delete these 2 lines
@@ -16,9 +31,10 @@ Install node, nvm, and npm
     Install nvm via curl command: https://github.com/nvm-sh/nvm/blob/master/README.md#installing-and-updating
     "nvm install <version>" (This will install both nodejs and npm)
 
-Install web server
+Install web server (personal project? Don't think it's needed for node)
     "npm install http-server"
 
+===== Directions after this are for a new project ======
 Install React and Next
     "npm install react react-dom react-router next"
     Add the following to package.json to run the development server at localhost:3000

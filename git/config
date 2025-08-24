@@ -9,6 +9,8 @@
 	excludesfile = ~/.gitignore
 	pager = less -FEX
 	editor = vim
+	eol = lf
+	autocrlf = false
 [diff]
 	tool = vimdiff
 [format]

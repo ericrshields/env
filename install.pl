@@ -16,17 +16,14 @@ my @link_dest;
 # URL to pull main env repo from
 my $repo = 'git@github.com:coldcandor/env.git';
 
-# Destination install directory
-my $base = <~>;
-
 # Home and bin for symlinks
 my $home = <~>;
 my $bin = <~/bin>;
 
-# Installs the core repo at $base/$repo_dir
+# Installs the core repo at $home/$repo_dir
 my $repo_dir = "env";
 
-# Installs sub repos in dirs inside $base/$sub_repo_dir
+# Installs sub repos in dirs inside $home/$sub_repo_dir
 my $sub_repo_dir = "env-sub";
 
 push @sub_repos,
@@ -34,7 +31,7 @@ push @sub_repos,
 	"https://github.com/shannonmoeller/up.git",
 	"https://github.com/shannonmoeller/bulk.git",
 	"https://github.com/vim-scripts/Colortest.git",
-	"https://github.com/coldcandor/extract.git",
+    "https://github.com/coldcandor/extract.git",
 	"https://github.com/ericrshields/gitprompt.git";
 #	"https://github.com/synacor/gitprompt.git"  //backup repo
 #	"https://github.com/somegithubuser/env.git";  //backup repo
@@ -42,31 +39,31 @@ push @sub_repos,
 
 # Symlink sources
 push @link_source,
-	"$base/$sub_repo_dir/hosts/hosts.sh",
-	"$base/$sub_repo_dir/up/up.sh",
-	"$base/$sub_repo_dir/bulk/bulk.sh",
-	"$base/$sub_repo_dir/Colortest/colortest",
-	"$base/$sub_repo_dir/extract/extract.bash",
-	"$base/$sub_repo_dir/gitprompt/gitprompt.pl",
+	"$home/$sub_repo_dir/hosts/hosts.sh",
+	"$home/$sub_repo_dir/up/up.sh",
+	"$home/$sub_repo_dir/bulk/bulk.sh",
+	"$home/$sub_repo_dir/Colortest/colortest",
+	"$home/$sub_repo_dir/extract/extract.bash",
+	"$home/$sub_repo_dir/gitprompt/gitprompt.pl",
+    "$home/$repo_dir/git/completion.bash",
+    "$home/$repo_dir/tree/tree.sh",
 
-	"$base/$repo_dir/git/config",
-	"$base/$repo_dir/git/ignore",
-	"$base/$repo_dir/git/attributes",
-	"$base/$repo_dir/bash/rc",
-#	"$base/$repo_dir/bash/local/amazon", # TODO: Fix this to pick one based on CLI option
-	"$base/$repo_dir/bash/profile",
-	"$base/$repo_dir/bash/dir_colors",
-	"$base/$repo_dir/bash/hush",
-	"$base/$repo_dir/screen/rc",
-	"$base/$repo_dir/vim/rc",
-	"$base/$repo_dir/nvm/rc",
-	"$base/$repo_dir/vnc/xstartup",
-#	"$base/$repo_dir/intellij/settings.jar",
+	"$home/$repo_dir/git/config",
+	"$home/$repo_dir/git/ignore",
+	"$home/$repo_dir/git/attributes",
+	"$home/$repo_dir/bash/rc",
+#	"$home/$repo_dir/bash/local/amazon", # TODO: Fix this to pick one based on CLI option
+	"$home/$repo_dir/bash/profile",
+	"$home/$repo_dir/bash/dir_colors",
+	"$home/$repo_dir/bash/hush",
+	"$home/$repo_dir/screen/rc",
+	"$home/$repo_dir/vim/rc",
+	"$home/$repo_dir/nvm/rc",
+	"$home/$repo_dir/vnc/xstartup",
+#	"$home/$repo_dir/intellij/settings.jar",
 
-	"$base/$repo_dir/git/completion.bash",
-	"$base/$repo_dir/tree/tree.sh",
-	"$base/$repo_dir/ssh/config",
-	"$base/$repo_dir/ssh/authorized_keys";
+	"$home/$repo_dir/ssh/config",
+	"$home/$repo_dir/ssh/authorized_keys";
 
 # Symlink destinations
 push @link_dest,
@@ -76,6 +73,8 @@ push @link_dest,
 	"$bin/colortest",
 	"$bin/extract",
 	"$bin/gitprompt.pl",
+    "$bin/git-completion.sh",
+    "$bin/tree",
 
 	"$home/.gitconfig",
 	"$home/.gitignore",
@@ -91,25 +90,22 @@ push @link_dest,
 	"$home/.vnc/xstartup",
 #	"$home/.IntelliJIdea2022.3/config/settings.jar", # Currently using Intellij acct to store settings
 
-	"$bin/git-completion.sh",
-	"$bin/tree",
 	"$home/.ssh/config",
 	"$home/.ssh/authorized_keys";
 
 # Setup directories
 # TODO:  Add more verbosity here for non-error cases
 if (!-e $home) { die "Home directory does not exist and should not be auto-created.\n" }
-&createDir($base);
 
-if (!-e "$base/$repo_dir") {
-	system("cd $base && git clone $repo $repo_dir") == 0
-		or die "Attempt to clone $repo into $base/$repo_dir failed: $?";
-} elsif (!(&promptUser("$base/$repo_dir already exists.  Enter continue if the repo is already cloned, anything else to exit.", "continue")
+if (!-e "$home/$repo_dir") {
+	system("cd $home && git clone $repo $repo_dir") == 0
+		or die "Attempt to clone $repo into $home/$repo_dir failed: $?";
+} elsif (!(&promptUser("$home/$repo_dir already exists.  Enter continue if the repo is already cloned, anything else to exit.", "continue")
 		eq "continue")) {
-	die "$base/$repo_dir already exists.  Please remove it or specify a new destination.\n";
+	die "$home/$repo_dir already exists.  Please remove it or specify a new destination.\n";
 }
 
-&createDir("$base/$sub_repo_dir");
+&createDir("$home/$sub_repo_dir");
 &createDir($bin);
 &createDir("$home/.ssh");
 &createDir("$home/.vnc");
@@ -118,15 +114,15 @@ if (!-e "$base/$repo_dir") {
 # Clone subrepos
 for my $i (@sub_repos) {
 	$i =~ /\/(\w+)\.git$/; # Match is saved automatically into $1
-	if (!$1 || !-e "$base/$sub_repo_dir/$1") {
-		system("cd $base/$sub_repo_dir && git clone $i") == 0
+	if (!$1 || !-e "$home/$sub_repo_dir/$1") {
+		system("cd $home/$sub_repo_dir && git clone $i") == 0
 			or print STDERR "Attempt to clone $i failed: $?\n";
 	}
 }
 
 # Add this before the symlink creation loop
 if (scalar(@link_source) != scalar(@link_dest)) {
-    die "Error: Number of source links (" . scalar(@link_source) . 
+    die "Error: Number of source links (" . scalar(@link_source) .
         ") does not match number of destination links (" . scalar(@link_dest) . ")\n";
 }
 

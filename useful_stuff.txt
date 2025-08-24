@@ -99,3 +99,14 @@ Log file locations (CentOS 7)
 img.dark {
   filter: invert(100%) hue-rotate(180deg) brightness(120%) contrast(150%);
 }
+
+// Convert repo from CRLF to LF line separators
+git ls-files --eol // Check current separators
+echo "* text=auto eol=lf" > .gitattributes // Tell git to always use LF when committing
+git ls-files --eol // Check current separators - should now have "attr/text=auto eol=lf" as a column
+git add --update --renormalize // Tell git to update every file with the current settings
+gci -m'CRLF -> LF' // Create a commit for the update
+git push
+// Delete the repo and recreate it to ensure that the working directory has the right separators
+
+// WebStorm (and possibly other IDEs) will create files in WSL2 on Windows as root, which could create issues for updates and deletions

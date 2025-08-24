@@ -24,12 +24,10 @@ Setup env
     Clone desired repos into projects dir (don't forget to re-add the ssh key to the ring)
 
 Install node, nvm, and npm
-    Navigate to project folder
-    Should not need to manually install nodejs and npm, as they will be old versions.  If using nvm directly works, delete these 2 lines
-    "sudo apt install nodejs"
-    "sudo apt install npm"
     Install nvm via curl command: https://github.com/nvm-sh/nvm/blob/master/README.md#installing-and-updating
-    "nvm install <version>" (This will install both nodejs and npm)
+    "nvm install node" (This will install the lastest version of both nodejs and npm)
+    "nvm use node"
+    "nvm alias default node"
 
 Install web server (personal project? Don't think it's needed for node)
     "npm install http-server"

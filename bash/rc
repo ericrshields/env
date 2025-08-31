@@ -191,5 +191,14 @@ export PATH="${HOME}/.nvm/current/bin:"$PATH
 # Add Claude and similar products that use .local
 export PATH="${HOME}/.local/bin:"$PATH
 
+# Add Go (export exactly as suggested in https://go.dev/doc/install)
+export PATH=$PATH":/usr/local/go/bin"
+
+# Increase JavaScript heap size to 8GB (needed for giant project like Grafana)
+export NODE_OPTIONS="--max-old-space-size=8192"
+
+# Grafana setup
+export GF_DEFAULT_APP_MODE=development
+
 # Make home bin the highest override
 export PATH="${HOME}/bin:"$PATH

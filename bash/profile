@@ -18,5 +18,6 @@ if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
     ln -sf "$SSH_AUTH_SOCK" ~/.ssh/agent.socket
 fi
 export SSH_AUTH_SOCK=~/.ssh/agent.socket
+
 # If screen session exists and there is an interactive terminal, Run screen (first detaching if necessary - attach to first session if multiple)
-if [ -z "$STY" ] && [[ -t 0 || -p /dev/stdin ]]; then screen -d -RR; fi
+# if [ -z "$STY" ] && [[ -t 0 || -p /dev/stdin ]]; then screen -d -RR; fi

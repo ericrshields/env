@@ -14,7 +14,7 @@ my @link_source;
 my @link_dest;
 
 # URL to pull main env repo from
-my $repo = 'git@github.com:coldcandor/env.git';
+my $repo = 'git@github.com:ericrshields/env.git';
 
 # Home and bin for symlinks
 my $home = <~>;
@@ -32,7 +32,7 @@ push @sub_repos,
 	"https://github.com/shannonmoeller/bulk.git",
 	"https://github.com/vim-scripts/Colortest.git",
     "https://github.com/coldcandor/extract.git",
-	"https://github.com/ericrshields/gitprompt.git";
+	"git@github.com:ericrshields/gitprompt.git";
 #	"https://github.com/synacor/gitprompt.git"  //backup repo
 #	"https://github.com/somegithubuser/env.git";  //backup repo
 #	"https://github.com/mikecanz/env.git";  //Original source

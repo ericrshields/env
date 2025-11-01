@@ -110,3 +110,6 @@ git push
 // Delete the repo and recreate it to ensure that the working directory has the right separators
 
 // WebStorm (and possibly other IDEs) will create files in WSL2 on Windows as root, which could create issues for updates and deletions
+
+// Lots of useful ideas in this example .bashrc
+https://tldp.org/LDP/abs/html/sample-bashrc.html

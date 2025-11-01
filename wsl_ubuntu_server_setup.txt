@@ -1,9 +1,14 @@
+If new machine, copy PowerShell settings into
+    C:\Users\<USER>\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+
 Setup WSL and install Ubuntu
     Guide: https://learn.microsoft.com/en-us/windows/wsl/install
     Open PowerShell
     Enable WSL, if needed: "dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart"
     Install default Ubuntu: "wsl --install -d Ubuntu"
-    Restart computer and let the install finish (Will take around 10 minutes)
+    Restart computer and let the install finish (May take around 10 minutes)
+    Check if the distro is installed: "wsl --list"
+    If not, re-run the install command
     Create username and password (pick something you can type when needed for sudo)
     "sudo apt update" (Updates package lists - may take a while)
     "sudo apt full-upgrade"
@@ -11,20 +16,25 @@ Setup WSL and install Ubuntu
 Set up SSH
     Copy SSH key to ~/.ssh/
     Start ssh process: eval $(ssh-agent)
-    Add GitHub ey to ring: ssh-add ~/.ssh/<github_key>.osh
+    Add GitHub key to ring: ssh-add ~/.ssh/<github_key>.osh
 
 Setup env
-    If using Powershell instead of Putty, copy settings to C:\Users\<USER>\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-    "sudo apt install screen"
+    (PowerShell recommended over screen for local dev) "sudo apt install screen"
     "git clone git@github.com:ericrshields/env.git ~/env"
+    Ensure everything is in local user permission scope: "sudo chown -R eshields:eshields ~"
     "perl ~/env/install.pl"
+    If you don't need the backups: "find . -name "*~*""
+    Confirm good to delete, then "find . -name "*~*" -delete"
     "source ~/.bashrc"
     Close terminal and reopen
+    If things seem broken, ensure that the latest changes to env (and sub repos!) are pushed to origin
     "mkdir ~/projects"
     Clone desired repos into projects dir (don't forget to re-add the ssh key to the ring)
+    Sometimes the .ssh files will have permissions altered. Reset with "chmod 600 ~/.ssh/<key file>"
 
 Install node, nvm, and npm
     Install nvm via curl command: https://github.com/nvm-sh/nvm/blob/master/README.md#installing-and-updating
+    Refresh the .rc file "source ~/.bashrc"
     "nvm install node" (This will install the lastest version of both nodejs and npm)
     "nvm use node"
     "nvm alias default node"

@@ -1,0 +1,85 @@
+{
+	"persistedWindowLayouts" : 
+	[
+		{
+			"initialPosition" : "-959,0",
+			"initialSize" : 
+			{
+				"height" : 998,
+				"width" : 958
+			},
+			"launchMode" : "default",
+			"tabLayout" : 
+			[
+				{
+					"action" : "newTab",
+					"commandline" : "C:\\WINDOWS\\system32\\wsl.exe --distribution-id {82a4ee38-febb-4e99-81a4-ec235049654a} --cd ~",
+					"profile" : "{4c5fdd92-8960-5d93-8e57-75f31a45c9c9}",
+					"sessionId" : "{8fa1a39f-bc65-4e72-b038-8c60c55915ac}",
+					"startingDirectory" : "C:\\Users\\shier",
+					"suppressApplicationTitle" : false,
+					"tabTitle" : "Ubuntu"
+				},
+				{
+					"action" : "renameTab",
+					"title" : "Server"
+				},
+				{
+					"action" : "focusPane",
+					"id" : 0
+				},
+				{
+					"action" : "newTab",
+					"commandline" : "C:\\WINDOWS\\system32\\wsl.exe --distribution-id {82a4ee38-febb-4e99-81a4-ec235049654a} --cd ~",
+					"profile" : "{4c5fdd92-8960-5d93-8e57-75f31a45c9c9}",
+					"sessionId" : "{9aacbc56-0b63-4717-9f8b-c285e0bb11c8}",
+					"startingDirectory" : "C:\\Users\\shier",
+					"suppressApplicationTitle" : false,
+					"tabTitle" : "Ubuntu"
+				},
+				{
+					"action" : "renameTab",
+					"title" : "Typecheck"
+				},
+				{
+					"action" : "focusPane",
+					"id" : 0
+				},
+				{
+					"action" : "newTab",
+					"commandline" : "C:\\WINDOWS\\system32\\wsl.exe --distribution-id {82a4ee38-febb-4e99-81a4-ec235049654a} --cd ~",
+					"profile" : "{4c5fdd92-8960-5d93-8e57-75f31a45c9c9}",
+					"sessionId" : "{12f86823-a945-4855-9a93-fe6bd0233654}",
+					"startingDirectory" : "C:\\Users\\shier",
+					"suppressApplicationTitle" : false,
+					"tabTitle" : "Ubuntu"
+				},
+				{
+					"action" : "renameTab",
+					"title" : "Claude"
+				},
+				{
+					"action" : "focusPane",
+					"id" : 0
+				},
+				{
+					"action" : "newTab",
+					"commandline" : "C:\\WINDOWS\\system32\\wsl.exe --distribution-id {82a4ee38-febb-4e99-81a4-ec235049654a} --cd ~",
+					"profile" : "{4c5fdd92-8960-5d93-8e57-75f31a45c9c9}",
+					"sessionId" : "{40592177-63d1-4e14-8c66-f3fdfd5f6031}",
+					"startingDirectory" : "C:\\Users\\shier",
+					"suppressApplicationTitle" : false,
+					"tabTitle" : "Ubuntu"
+				},
+				{
+					"action" : "renameTab",
+					"title" : "CDK"
+				},
+				{
+					"action" : "focusPane",
+					"id" : 0
+				}
+			]
+		}
+	]
+}

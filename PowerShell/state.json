@@ -1,0 +1,36 @@
+{
+	"dismissedMessages" : 
+	[
+		"closeOnExitInfo"
+	],
+	"generatedProfiles" : 
+	[
+		"{b453ae62-4e3d-5e58-b989-0a998ec441b8}",
+		"{4c5fdd92-8960-5d93-8e57-75f31a45c9c9}"
+	],
+	"persistedWindowLayouts" : 
+	[
+		{
+			"initialPosition" : "175,335",
+			"initialSize" : 
+			{
+				"height" : 655,
+				"width" : 871
+			},
+			"launchMode" : "default",
+			"tabLayout" : 
+			[
+				{
+					"action" : "newTab",
+					"commandline" : "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" ",
+					"profile" : "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+					"sessionId" : "{295dfb82-ce4e-47fd-94f6-04adb1e2cce1}",
+					"startingDirectory" : "C:\\Users\\shier",
+					"suppressApplicationTitle" : false,
+					"tabTitle" : "Windows PowerShell"
+				}
+			]
+		}
+	],
+	"settingsHash" : "10038c0cd17d75ab-01dc35ae9a5e0f2e"
+}

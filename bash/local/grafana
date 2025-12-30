@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Increase JavaScript heap size to 10GB (needed for giant project like Grafana)
+export NODE_OPTIONS="--max-old-space-size=10240"
+
+# Grafana setup
+export GF_DEFAULT_APP_MODE=development
+
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
+export AWS_PROFILE=AdministratorAccess-366620023056
+
+# Add SSH keys to local keychain
+eval $(keychain --eval --agents ssh ~/.ssh/github-ed25519)

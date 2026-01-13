@@ -36,8 +36,8 @@ TERM vt100
 TERM dtterm
 TERM color_xterm
 TERM ansi
-TERM screen
-TERM screen.linux
+TERM tmux
+TERM tmux-256color
 TERM kon
 TERM kterm
 TERM gnome

@@ -12,11 +12,11 @@
 [[ -d /usr/local/bin ]] && export PATH=/usr/local/bin:$PATH
 [[ -d ~/bin ]] && export PATH=~/bin:$PATH
 
-# Move auth socket to known place so SSH forwarding works in screen after connection interrupt
+# Move auth socket to known place so SSH forwarding works in tmux after connection interrupt
 # @author http://superuser.com/a/424588/541446
 if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
     ln -sf "$SSH_AUTH_SOCK" ~/.ssh/agent.socket
 fi
 export SSH_AUTH_SOCK=~/.ssh/agent.socket
-# If screen session exists and there is an interactive terminal, Run screen (first detaching if necessary - attach to first session if multiple)
-#if [ -z "$STY" ] && [[ -t 0 || -p /dev/stdin ]]; then screen -d -RR; fi
+# If tmux session exists and there is an interactive terminal, attach to tmux (or create new session if none exists)
+#if [ -z "$TMUX" ] && [[ -t 0 || -p /dev/stdin ]]; then tmux attach -t work || tmux new-session -s work; fi

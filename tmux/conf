@@ -1,26 +1,58 @@
 # ~/.tmux.conf
 # vim: set filetype=sh:
 
-# Status
-set -g status-left "#[bg=brightgreen]#[fg=black] #h "
-set -g status-right "#[fg=brightblue]%m/%d #[bg=brightblue]#[fg=black] %H:%M "
-setw -g window-status-current-format "#[bg=brightyellow]#[fg=black] #I #W "
-setw -g window-status-format "#[fg=brightyellow] #I #W "
+# Status Bar Configuration
+set -g status-left "#[bg=brightgreen]#[fg=black] #S:#h "  # Show session name and hostname on left
+set -g status-left-length 40  # Allow longer session/host names
+set -g status-right "#[fg=yellow]#(uptime | cut -d',' -f 3-) #[fg=brightblue]%m/%d #[bg=brightblue]#[fg=black] %H:%M "  # Show load average, date, and time on right
+set -g status-right-length 80  # Allow longer status right content
+setw -g window-status-current-format "#[bg=brightyellow]#[fg=black] #I #W "  # Format for active window (yellow background)
+setw -g window-status-format "#[fg=brightyellow] #I #W "  # Format for inactive windows (yellow text)
 
-# Keys
-setw -g mode-keys vi
-bind h select-pane -L
-bind j select-pane -D
-bind k select-pane -U
-bind l select-pane -R
+# Key Bindings
+setw -g mode-keys vi  # Use vi-style navigation in copy mode
+# WASD pane navigation (Ctrl+b then w/a/s/d)
+bind w select-pane -U  # Up
+bind a select-pane -L  # Left
+bind s select-pane -D  # Down
+bind d select-pane -R  # Right
+# Arrow key pane navigation (Ctrl+b then arrow key)
+bind Left select-pane -L   # Left
+bind Down select-pane -D   # Down
+bind Up select-pane -U     # Up
+bind Right select-pane -R  # Right
 
 # Colors
-set -g default-terminal "xterm-256color"
-set -g pane-active-border-fg white
-set -g pane-border-fg black
-set -g status-bg black
-set -g status-fg white
+set -g default-terminal "tmux-256color"  # Enable 256 color support
+set -g pane-active-border-style fg=white  # Active pane border is white
+set -g pane-border-style fg=black  # Inactive pane border is black
+set -g status-style bg=black,fg=white  # Status bar: black background, white text
 
-# Mouse
-set -g mouse-resize-pane on
-set -g mouse-select-pane on
+# Mouse Support
+set -g mouse on  # Enable mouse for pane selection, resizing, and scrolling
+# Note: Hold Shift while selecting text to use terminal's native selection (PowerShell/PuTTY)
+
+# Window Management
+set -g base-index 1  # Start window numbering at 1 (easier to reach than 0)
+setw -g pane-base-index 1  # Start pane numbering at 1
+set -g renumber-windows on  # Automatically renumber windows when one is closed
+bind c new-window  # Ctrl+b c: Create new window
+bind n next-window  # Ctrl+b n: Go to next window
+bind p previous-window  # Ctrl+b p: Go to previous window
+bind | split-window -h -c "#{pane_current_path}"  # Ctrl+b |: Split horizontally (opens in current directory)
+bind - split-window -v -c "#{pane_current_path}"  # Ctrl+b -: Split vertically (opens in current directory)
+
+# Activity Monitoring (for background processes like npm dev, docker-compose, etc.)
+setw -g monitor-activity on  # Monitor windows for activity
+set -g visual-activity off  # Don't show popup messages, just highlight in status bar
+setw -g window-status-activity-style fg=red,bold  # Windows with activity show in red bold (works with window-status-format)
+set -g visual-bell off  # Don't show visual bell
+set -g bell-action other  # Ring bell for activity in other windows
+
+# Scrollback & Session
+set -g history-limit 50000  # Large scrollback buffer for checking logs
+setw -g aggressive-resize on  # Resize window to smallest active client viewing it
+
+# Process Management
+bind x kill-pane  # Ctrl+b x: Kill pane without confirmation
+bind r source-file ~/.tmux.conf \; display "Reloaded!"  # Ctrl+b r: Reload tmux config

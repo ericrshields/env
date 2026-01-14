@@ -124,11 +124,20 @@ if (&promptUser("Is this a cloud instance? (creates environment marker)", "no") 
 	print "Created .env-marker-cloud marker file\n";
 }
 
-# Project layer: Grafana development marker
-if (&promptUser("Is this a Grafana development machine? (creates project marker)", "no") eq "yes") {
-	open(my $fh, '>', "$home/$repo_dir/.env-marker-project-grafana") or die "Cannot create marker file: $!";
-	close($fh);
-	print "Created .env-marker-project-grafana marker file\n";
+# Project layer: Create markers for specified projects
+my $projects = &promptUser("Enter project names (space or comma separated, or 'none')", "none");
+if ($projects ne "none") {
+	# Split on spaces or commas and process each project
+	my @project_list = split(/[\s,]+/, $projects);
+	foreach my $project (@project_list) {
+		# Trim whitespace
+		$project =~ s/^\s+|\s+$//g;
+		next if $project eq "";
+
+		open(my $fh, '>', "$home/$repo_dir/.env-marker-project-$project") or die "Cannot create marker file: $!";
+		close($fh);
+		print "Created .env-marker-project-$project marker file\n";
+	}
 }
 
 # Clone subrepos

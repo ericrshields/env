@@ -178,36 +178,49 @@ fi
 		eval "$NEWNAME_FUNC"
 	}
 
-# Environment-based settings - automatically load based on environment
+# Environment-based settings - layered configuration system
+# Configs load in order: base → context → environment → project
+# Later layers override earlier settings
 
-# Grafana development machine (determined by marker file)
-if [[ -f ~/env/.grafana-machine ]] && [[ -f ~/env/bash/local/grafana ]]; then
-    echo "Loading: ~/env/bash/local/grafana"
-    . ~/env/bash/local/grafana
+# Base layer: Manual config (if present)
+if [[ -f ~/.bash_local ]]; then
+    echo "Loading: ~/.bash_local (base)"
+    . ~/.bash_local
 fi
 
-if [[ -n "$WSL_DISTRO_NAME" ]] || [[ -n "$WSL_INTEROP" ]]; then
-    # We're in WSL - load shared config first, then specific overrides
-    if [[ -f ~/env/bash/local/wsl ]]; then
-        echo "Loading: ~/env/bash/local/wsl"
-        . ~/env/bash/local/wsl
-    fi
-    if [[ -f ~/env/.work-machine ]]; then
-        if [[ -f ~/env/bash/local/wsl-work ]]; then
-            echo "Loading: ~/env/bash/local/wsl-work"
-            . ~/env/bash/local/wsl-work
-        fi
-    else
-        if [[ -f ~/env/bash/local/wsl-home ]]; then
-            echo "Loading: ~/env/bash/local/wsl-home"
-            . ~/env/bash/local/wsl-home
-        fi
+# Context layer: Work or Home (home is default)
+if [[ -f ~/env/.env-marker-work ]]; then
+    if [[ -f ~/env/bash/local/context-work ]]; then
+        echo "Loading: ~/env/bash/local/context-work"
+        . ~/env/bash/local/context-work
     fi
 else
-    # Fallback to manual symlink if no environment matches
-    if [[ -f ~/.bash_local ]]; then
-        echo "Loading: ~/.bash_local"
-        . ~/.bash_local
+    if [[ -f ~/env/bash/local/context-home ]]; then
+        echo "Loading: ~/env/bash/local/context-home"
+        . ~/env/bash/local/context-home
+    fi
+fi
+
+# Environment layer: WSL or Cloud (or neither)
+if [[ -n "$WSL_DISTRO_NAME" ]] || [[ -n "$WSL_INTEROP" ]]; then
+    # WSL environment (auto-detected)
+    if [[ -f ~/env/bash/local/environment-wsl ]]; then
+        echo "Loading: ~/env/bash/local/environment-wsl"
+        . ~/env/bash/local/environment-wsl
+    fi
+elif [[ -f ~/env/.env-marker-cloud ]]; then
+    # Cloud environment (marker-based)
+    if [[ -f ~/env/bash/local/environment-cloud ]]; then
+        echo "Loading: ~/env/bash/local/environment-cloud"
+        . ~/env/bash/local/environment-cloud
+    fi
+fi
+
+# Project layer: Grafana (or other projects)
+if [[ -f ~/env/.env-marker-grafana ]]; then
+    if [[ -f ~/env/bash/local/project-grafana ]]; then
+        echo "Loading: ~/env/bash/local/project-grafana"
+        . ~/env/bash/local/project-grafana
     fi
 fi
 

@@ -1,8 +1,0 @@
-#!/bin/bash
-
-# Shared WSL settings
-# This file is loaded first on all WSL instances, before wsl-work or wsl-home
-# Put common WSL settings here that apply to both work and home machines
-
-# Add SSH keys to local keychain
-eval $(keychain --eval --agents ssh ~/.ssh/github-ed25519)

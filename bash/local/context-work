@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Context layer: Work
+# Loaded when .env-marker-work exists (home is default if no marker)
+# Use for work-specific settings that apply across all environments
+
+# Define AWS SSO profile for work
+export AWS_PROFILE=AdministratorAccess-366620023056

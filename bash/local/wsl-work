@@ -1,8 +1,0 @@
-#!/bin/bash
-
-# Work-specific WSL settings
-# This file is loaded AFTER bash/local/wsl for work machines
-# (determined by presence of ~/env/.work-machine marker file)
-
-# Define AWS SSO profile for dev-cloud
-export AWS_PROFILE=AdministratorAccess-366620023056

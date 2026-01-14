@@ -109,18 +109,26 @@ if (!-e "$home/$repo_dir") {
 &createDir("$home/.vnc");
 #&createDir("$home/.IntelliJIdea2022.3/config");
 
-# Create work machine marker file if needed (for WSL environment detection)
-if (&promptUser("Is this a work machine? (creates marker file for WSL config)", "no") eq "yes") {
-	open(my $fh, '>', "$home/$repo_dir/.work-machine") or die "Cannot create marker file: $!";
+# Create environment marker files for layered configuration
+# Context layer: work machine marker (home is default)
+if (&promptUser("Is this a work machine? (creates context marker)", "no") eq "yes") {
+	open(my $fh, '>', "$home/$repo_dir/.env-marker-work") or die "Cannot create marker file: $!";
 	close($fh);
-	print "Created .work-machine marker file\n";
+	print "Created .env-marker-work marker file\n";
 }
 
-# Create Grafana machine marker file if needed
-if (&promptUser("Is this a Grafana development machine? (creates marker file for Grafana config)", "no") eq "yes") {
-	open(my $fh, '>', "$home/$repo_dir/.grafana-machine") or die "Cannot create marker file: $!";
+# Environment layer: cloud machine marker (WSL is auto-detected)
+if (&promptUser("Is this a cloud instance? (creates environment marker)", "no") eq "yes") {
+	open(my $fh, '>', "$home/$repo_dir/.env-marker-cloud") or die "Cannot create marker file: $!";
 	close($fh);
-	print "Created .grafana-machine marker file\n";
+	print "Created .env-marker-cloud marker file\n";
+}
+
+# Project layer: Grafana development marker
+if (&promptUser("Is this a Grafana development machine? (creates project marker)", "no") eq "yes") {
+	open(my $fh, '>', "$home/$repo_dir/.env-marker-grafana") or die "Cannot create marker file: $!";
+	close($fh);
+	print "Created .env-marker-grafana marker file\n";
 }
 
 # Clone subrepos

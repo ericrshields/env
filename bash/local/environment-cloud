@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Cloud environment settings
+# This file is loaded on remote cloud instances when .env-marker-cloud exists
+# Used for cloud-specific settings (SSH agent forwarding, cloud CLI tools, etc.)

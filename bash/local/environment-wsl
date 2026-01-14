@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Environment layer: WSL (auto-detected)
+# Loaded when running in Windows Subsystem for Linux
+# Use for WSL-specific settings (Windows interop, display, paths, etc.)
+
+# Add SSH keys to local keychain
+eval $(keychain --eval --agents ssh ~/.ssh/github-ed25519)

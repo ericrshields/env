@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Context layer: Home (default)
+# Loaded when .env-marker-work does NOT exist (home is the default context)
+# Use for personal/home settings that apply across all environments

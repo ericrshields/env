@@ -1,5 +1,4 @@
 .idea
 nul
 *.iml
-.work-machine
-.grafana-machine
+.env-marker-*

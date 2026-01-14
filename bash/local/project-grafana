@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Grafana development machine settings
-# This file is loaded automatically when ~/env/.grafana-machine marker file exists
-# Used for Grafana development (cloud or local)
+# Project layer: Grafana
+# Loaded when .env-marker-grafana exists
+# Use for Grafana-specific development settings
 
 # Increase JavaScript heap size to 10GB (needed for giant project like Grafana)
 export NODE_OPTIONS="--max-old-space-size=10240"

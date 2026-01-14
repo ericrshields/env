@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Grafana development machine settings
+# This file is loaded automatically when ~/env/.grafana-machine marker file exists
+# Used for Grafana development (cloud or local)
+
 # Increase JavaScript heap size to 10GB (needed for giant project like Grafana)
 export NODE_OPTIONS="--max-old-space-size=10240"
 
@@ -9,8 +13,3 @@ export GF_DEFAULT_APP_MODE=development
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-
-export AWS_PROFILE=AdministratorAccess-366620023056
-
-# Add SSH keys to local keychain
-eval $(keychain --eval --agents ssh ~/.ssh/github-ed25519)

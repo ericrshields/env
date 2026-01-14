@@ -109,6 +109,20 @@ if (!-e "$home/$repo_dir") {
 &createDir("$home/.vnc");
 #&createDir("$home/.IntelliJIdea2022.3/config");
 
+# Create work machine marker file if needed (for WSL environment detection)
+if (&promptUser("Is this a work machine? (creates marker file for WSL config)", "no") eq "yes") {
+	open(my $fh, '>', "$home/$repo_dir/.work-machine") or die "Cannot create marker file: $!";
+	close($fh);
+	print "Created .work-machine marker file\n";
+}
+
+# Create Grafana machine marker file if needed
+if (&promptUser("Is this a Grafana development machine? (creates marker file for Grafana config)", "no") eq "yes") {
+	open(my $fh, '>', "$home/$repo_dir/.grafana-machine") or die "Cannot create marker file: $!";
+	close($fh);
+	print "Created .grafana-machine marker file\n";
+}
+
 # Clone subrepos
 for my $i (@sub_repos) {
 	$i =~ /\/(\w+)\.git$/; # Match is saved automatically into $1

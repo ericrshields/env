@@ -173,14 +173,20 @@ fi
 	}
 
 # Environment-based settings - automatically load based on environment
+
+# Grafana development machine (determined by marker file)
+[[ -f ~/env/.grafana-machine ]] && [[ -f ~/env/bash/local/grafana ]] && . ~/env/bash/local/grafana
+
 if [[ -n "$WSL_DISTRO_NAME" ]] || [[ -n "$WSL_INTEROP" ]]; then
-    # We're in WSL
+    # We're in WSL - load shared config first, then specific overrides
     [[ -f ~/env/bash/local/wsl ]] && . ~/env/bash/local/wsl
-elif [[ $(hostname) == ip-* ]]; then
-    # We're on an EC2/cloud dev instance (hostname starts with "ip-")
-    [[ -f ~/env/bash/local/grafana ]] && . ~/env/bash/local/grafana
+    if [[ -f ~/env/.work-machine ]]; then
+        [[ -f ~/env/bash/local/wsl-work ]] && . ~/env/bash/local/wsl-work
+    else
+        [[ -f ~/env/bash/local/wsl-home ]] && . ~/env/bash/local/wsl-home
+    fi
 else
-    # Fallback to manual symlink if neither condition matches
+    # Fallback to manual symlink if no environment matches
     [[ -f ~/.bash_local ]] && . ~/.bash_local
 fi
 

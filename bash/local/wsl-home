@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Home-specific WSL settings
+# This file is loaded AFTER bash/local/wsl for home machines
+# (when ~/env/.work-machine marker file is NOT present)

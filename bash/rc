@@ -62,7 +62,6 @@ fi
 	alias lx='ll -XB'
 	alias mkdir='mkdir -p'
 	alias pa='ps aux | ack'
-	alias tree='tree -CF'
 	alias vi='vim'
 	# @author eshields
 	alias rm='rm -r'
@@ -70,11 +69,6 @@ fi
 	alias addssh='eval "$(ssh-agent -s)" && ssh-add '
 
 # Functions
-	# From smoeller
-#	cup() { __upgen "$1" && local a="${__UPREPLY[0]}${__UPREPLY[1]}" && __upgen "$2" && local b="${__UPREPLY[0]}${__UPREPLY[1]}" && cp "${a:-$1}" "${b:-$2}"; }
-#	sup() { __upgen "$1" && local a="${__UPREPLY[0]}${__UPREPLY[1]}" && sv "${a:-$1}"; }
-	ta()  { tree -a -I '*.git|*.swp' -L "${@:-'100'}"; }
-
 	# Search for a directory (fd) or file (ff) matching a given regex
 	# Allows a second parameter for defining options for find
 	# @author smoeller/eshields
@@ -178,8 +172,17 @@ fi
 		eval "$NEWNAME_FUNC"
 	}
 
-# Environemnt-based settings
-[[ -f ~/.bash_local ]] && . ~/.bash_local
+# Environment-based settings - automatically load based on environment
+if [[ -n "$WSL_DISTRO_NAME" ]] || [[ -n "$WSL_INTEROP" ]]; then
+    # We're in WSL
+    [[ -f ~/env/bash/local/wsl ]] && . ~/env/bash/local/wsl
+elif [[ $(hostname) == ip-* ]]; then
+    # We're on an EC2/cloud dev instance (hostname starts with "ip-")
+    [[ -f ~/env/bash/local/grafana ]] && . ~/env/bash/local/grafana
+else
+    # Fallback to manual symlink if neither condition matches
+    [[ -f ~/.bash_local ]] && . ~/.bash_local
+fi
 
 # NVM setup
 export NVM_DIR="${HOME}/.nvm"

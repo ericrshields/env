@@ -28,11 +28,11 @@ fi
 
 # Utilities
 if [[ -f ~/bin/git-completion.sh ]]; then
-    echo "Loading: ~/bin/git-completion.sh"
+    [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: ~/bin/git-completion.sh"
     . ~/bin/git-completion.sh && complete -o default -o nospace -F _git g gb
 fi
 if [[ -f ~/bin/up.sh ]]; then
-    echo "Loading: ~/bin/up.sh"
+    [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: ~/bin/up.sh"
     . ~/bin/up.sh && complete -o bashdefault -o default -o filenames -o nospace -F _up cup sup
 fi
 
@@ -181,23 +181,27 @@ fi
 # Environment-based settings - layered configuration system
 # Configs load in order: base → context → environment → project
 # Later layers override earlier settings
+# Set VERBOSE_ENV_LOADING=true to see what configs are being loaded
+
+# Helper function for verbose loading output
+_env_load() {
+    [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: $1"
+    . "$1"
+}
 
 # Base layer: Manual config (if present)
 if [[ -f ~/.bash_local ]]; then
-    echo "Loading: ~/.bash_local (base)"
-    . ~/.bash_local
+    _env_load ~/.bash_local
 fi
 
 # Context layer: Work or Home (home is default)
 if [[ -f ~/env/.env-marker-work ]]; then
     if [[ -f ~/env/bash/local/context-work ]]; then
-        echo "Loading: ~/env/bash/local/context-work"
-        . ~/env/bash/local/context-work
+        _env_load ~/env/bash/local/context-work
     fi
 else
     if [[ -f ~/env/bash/local/context-home ]]; then
-        echo "Loading: ~/env/bash/local/context-home"
-        . ~/env/bash/local/context-home
+        _env_load ~/env/bash/local/context-home
     fi
 fi
 
@@ -205,33 +209,36 @@ fi
 if [[ -n "$WSL_DISTRO_NAME" ]] || [[ -n "$WSL_INTEROP" ]]; then
     # WSL environment (auto-detected)
     if [[ -f ~/env/bash/local/environment-wsl ]]; then
-        echo "Loading: ~/env/bash/local/environment-wsl"
-        . ~/env/bash/local/environment-wsl
+        _env_load ~/env/bash/local/environment-wsl
     fi
 elif [[ -f ~/env/.env-marker-cloud ]]; then
     # Cloud environment (marker-based)
     if [[ -f ~/env/bash/local/environment-cloud ]]; then
-        echo "Loading: ~/env/bash/local/environment-cloud"
-        . ~/env/bash/local/environment-cloud
+        _env_load ~/env/bash/local/environment-cloud
     fi
 fi
 
-# Project layer: Grafana (or other projects)
-if [[ -f ~/env/.env-marker-grafana ]]; then
-    if [[ -f ~/env/bash/local/project-grafana ]]; then
-        echo "Loading: ~/env/bash/local/project-grafana"
-        . ~/env/bash/local/project-grafana
+# Project layer: Dynamic loading of all projects
+# Looks for .env-marker-project-* files and loads corresponding project-* configs
+for marker in ~/env/.env-marker-project-*; do
+    if [[ -f "$marker" ]]; then
+        # Extract project name from marker filename
+        project_name=$(basename "$marker" | sed 's/^\.env-marker-project-//')
+        project_file=~/env/bash/local/project-$project_name
+        if [[ -f "$project_file" ]]; then
+            _env_load "$project_file"
+        fi
     fi
-fi
+done
 
 # NVM setup
 export NVM_DIR="${HOME}/.nvm"
 if [ -s "$NVM_DIR/nvm.sh" ]; then
-    echo "Loading: $NVM_DIR/nvm.sh"
+    [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: $NVM_DIR/nvm.sh"
     \. "$NVM_DIR/nvm.sh"
 fi
 if [ -s "$NVM_DIR/bash_completion" ]; then
-    echo "Loading: $NVM_DIR/bash_completion"
+    [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: $NVM_DIR/bash_completion"
     \. "$NVM_DIR/bash_completion"
 fi
 export NVM_SYMLINK_CURRENT="true" # Tell nvm to create ~/.nvm/current/ symlink that points to currently active version

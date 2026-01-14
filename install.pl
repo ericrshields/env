@@ -126,9 +126,9 @@ if (&promptUser("Is this a cloud instance? (creates environment marker)", "no") 
 
 # Project layer: Grafana development marker
 if (&promptUser("Is this a Grafana development machine? (creates project marker)", "no") eq "yes") {
-	open(my $fh, '>', "$home/$repo_dir/.env-marker-grafana") or die "Cannot create marker file: $!";
+	open(my $fh, '>', "$home/$repo_dir/.env-marker-project-grafana") or die "Cannot create marker file: $!";
 	close($fh);
-	print "Created .env-marker-grafana marker file\n";
+	print "Created .env-marker-project-grafana marker file\n";
 }
 
 # Clone subrepos

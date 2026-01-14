@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Project layer: Grafana
-# Loaded when .env-marker-grafana exists
+# Loaded when .env-marker-project-grafana exists
 # Use for Grafana-specific development settings
 
 # Increase JavaScript heap size to 10GB (needed for giant project like Grafana)

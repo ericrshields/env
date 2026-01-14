@@ -27,15 +27,15 @@ my $repo_dir = "env";
 my $sub_repo_dir = "env-sub";
 
 push @sub_repos,
-	"https://github.com/shannonmoeller/hosts.git",
-	"https://github.com/shannonmoeller/up.git",
-	"https://github.com/shannonmoeller/bulk.git",
-	"https://github.com/vim-scripts/Colortest.git",
-    "https://github.com/coldcandor/extract.git",
-	"git@github.com:ericrshields/gitprompt.git";
-#	"https://github.com/synacor/gitprompt.git"  //backup repo
-#	"https://github.com/somegithubuser/env.git";  //backup repo
-#	"https://github.com/mikecanz/env.git";  //Original source
+	'https://github.com/shannonmoeller/hosts.git',
+	'https://github.com/shannonmoeller/up.git',
+	'https://github.com/shannonmoeller/bulk.git',
+	'https://github.com/vim-scripts/Colortest.git',
+    'https://github.com/coldcandor/extract.git',
+	'git@github.com:ericrshields/gitprompt.git';
+#	'https://github.com/synacor/gitprompt.git'  //backup repo
+#	'https://github.com/somegithubuser/env.git';  //backup repo
+#	'https://github.com/mikecanz/env.git';  //Original source
 
 # Symlink sources
 push @link_source,

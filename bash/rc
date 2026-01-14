@@ -27,8 +27,14 @@ else
 fi
 
 # Utilities
-[[ -f ~/bin/git-completion.sh ]] && . ~/bin/git-completion.sh && complete -o default -o nospace -F _git g gb
-[[ -f ~/bin/up.sh ]] && . ~/bin/up.sh && complete -o bashdefault -o default -o filenames -o nospace -F _up cup sup
+if [[ -f ~/bin/git-completion.sh ]]; then
+    echo "Loading: ~/bin/git-completion.sh"
+    . ~/bin/git-completion.sh && complete -o default -o nospace -F _git g gb
+fi
+if [[ -f ~/bin/up.sh ]]; then
+    echo "Loading: ~/bin/up.sh"
+    . ~/bin/up.sh && complete -o bashdefault -o default -o filenames -o nospace -F _up cup sup
+fi
 
 # Aliases
 	# Git aliases
@@ -175,25 +181,46 @@ fi
 # Environment-based settings - automatically load based on environment
 
 # Grafana development machine (determined by marker file)
-[[ -f ~/env/.grafana-machine ]] && [[ -f ~/env/bash/local/grafana ]] && . ~/env/bash/local/grafana
+if [[ -f ~/env/.grafana-machine ]] && [[ -f ~/env/bash/local/grafana ]]; then
+    echo "Loading: ~/env/bash/local/grafana"
+    . ~/env/bash/local/grafana
+fi
 
 if [[ -n "$WSL_DISTRO_NAME" ]] || [[ -n "$WSL_INTEROP" ]]; then
     # We're in WSL - load shared config first, then specific overrides
-    [[ -f ~/env/bash/local/wsl ]] && . ~/env/bash/local/wsl
+    if [[ -f ~/env/bash/local/wsl ]]; then
+        echo "Loading: ~/env/bash/local/wsl"
+        . ~/env/bash/local/wsl
+    fi
     if [[ -f ~/env/.work-machine ]]; then
-        [[ -f ~/env/bash/local/wsl-work ]] && . ~/env/bash/local/wsl-work
+        if [[ -f ~/env/bash/local/wsl-work ]]; then
+            echo "Loading: ~/env/bash/local/wsl-work"
+            . ~/env/bash/local/wsl-work
+        fi
     else
-        [[ -f ~/env/bash/local/wsl-home ]] && . ~/env/bash/local/wsl-home
+        if [[ -f ~/env/bash/local/wsl-home ]]; then
+            echo "Loading: ~/env/bash/local/wsl-home"
+            . ~/env/bash/local/wsl-home
+        fi
     fi
 else
     # Fallback to manual symlink if no environment matches
-    [[ -f ~/.bash_local ]] && . ~/.bash_local
+    if [[ -f ~/.bash_local ]]; then
+        echo "Loading: ~/.bash_local"
+        . ~/.bash_local
+    fi
 fi
 
 # NVM setup
 export NVM_DIR="${HOME}/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+    echo "Loading: $NVM_DIR/nvm.sh"
+    \. "$NVM_DIR/nvm.sh"
+fi
+if [ -s "$NVM_DIR/bash_completion" ]; then
+    echo "Loading: $NVM_DIR/bash_completion"
+    \. "$NVM_DIR/bash_completion"
+fi
 export NVM_SYMLINK_CURRENT="true" # Tell nvm to create ~/.nvm/current/ symlink that points to currently active version
 export PATH="${HOME}/.nvm/current/bin:"$PATH
 

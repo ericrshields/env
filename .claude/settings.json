@@ -44,12 +44,6 @@
       "WebFetch(domain:github.com)"
     ],
     "deny": [
-      "Bash(curl:*)",
-      "Bash(wget:*)",
-      "Bash(rm -rf:*)",
-      "Bash(sudo rm:*)",
-      "Bash(chmod:*)",
-      "Bash(chown:*)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)"

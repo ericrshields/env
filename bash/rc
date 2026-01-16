@@ -87,25 +87,6 @@ fi
 		git log --no-merges --abbrev-commit --abbrev=9 --grep="$1" --color=always
 	}
 
-	# Git-less method of determining current branch for all repos (uses .gitpgd exclusions)
-	# Combines all repos on a given branch into a single line of output
-	# @author ewastl
-	function branches { perl -e 'foreach(grep{/\S/}split(/\n/,`git pgd`)){die if!/\/([\w\-]+)$/;$r=$1;open(HEAD,"$_/.git/HEAD");chomp($h=<HEAD>);$h=$h=~/^ref\:\s*refs\/heads\/([\w\-]+)$/?("\e[".($1 eq"master"?"1;31":$1=~/^(m\d+)$/?"31":"33")."m$1\e[0m"):$h=~/^([0-9a-f]{6})[0-9a-f]{34}$/?"\e[36m$1\e[0m":$h;push @{$h{$h}},$r;close HEAD}foreach(sort{lc$a cmp lc$b}keys%h){print "$_\t".join(" ",sort{lc$a cmp lc$b}@{$h{$_}})."\n"}'; }
-
-	# Remove local and publish/ branches that are fully merged to main
-	# @author http://devblog.springest.com/a-script-to-remove-old-git-branches (modified)
-	clean_branches() {
-		git checkout main
-		git fetch origin
-
-		# Remove branches for which the remote tracking branch no longer exists
-		git remote prune origin
-
-		# Remove local fully merged branches
-		# TODO: Pipe list from prune into this, as github workflow rebases everything, breaking -d
-		git branch --no-color --merged origin/main | xargs git branch -d
-	}
-
 	# Locate the line number and source file for a user defined shell function
 	# @author HairOfTheDog http://superuser.com/a/229038
 	functions() {

@@ -1,0 +1,206 @@
+#!/bin/bash
+# Comprehensive git branch cleanup utility
+# Detects and removes branches that are:
+# - Merged directly (regular merge, fast-forward, no-ff)
+# - Squash-merged (GitHub's default PR merge)
+# - Rebase-merged
+# - Remote-deleted but fully merged to main
+#
+# Usage: clean-branches [--dry-run] [--main branch-name]
+# @author eshields
+
+main() {
+	local main_branch="main"
+	local dry_run=false
+
+	# Parse options
+	while [[ $# -gt 0 ]]; do
+		case $1 in
+			--dry-run|-n)
+				dry_run=true
+				shift
+				;;
+			--main|-m)
+				main_branch="$2"
+				shift 2
+				;;
+			--help|-h)
+				show_help
+				exit 0
+				;;
+			*)
+				# If not a flag, treat as main branch name
+				if [[ ! "$1" =~ ^- ]]; then
+					main_branch="$1"
+				fi
+				shift
+				;;
+		esac
+	done
+
+	echo "=== Branch Cleanup (main: $main_branch) ==="
+	echo ""
+
+	# Update from remote and prune deleted branches
+	echo "Fetching and pruning..."
+	git fetch origin --prune
+	echo ""
+
+	# Get current branch and arrays for categorization
+	local current=$(git branch --show-current)
+	local -a merged_directly=()
+	local -a merged_squashed=()
+	local -a deleted_remote=()
+
+	# Get all local branches except main and current
+	local branches=$(git branch --format='%(refname:short)' | grep -v "^${main_branch}$" | grep -v "^${current}$")
+
+	echo "Analyzing branches..."
+	for branch in $branches; do
+		# Category 1: Merged directly (branch is ancestor of main)
+		if git merge-base --is-ancestor "$branch" "origin/$main_branch" 2>/dev/null; then
+			merged_directly+=("$branch")
+			continue
+		fi
+
+		# Category 2: Remote deleted - check if squash/rebase merged
+		if ! git rev-parse --verify "origin/$branch" &>/dev/null; then
+			local merge_base=$(git merge-base "$branch" "origin/$main_branch" 2>/dev/null)
+			if [[ -z "$merge_base" ]]; then
+				deleted_remote+=("$branch")
+				continue
+			fi
+
+			# Check if diff is empty (all changes in main)
+			local branch_diff=$(git diff "origin/$main_branch"..."$branch" 2>/dev/null)
+			if [[ -z "$branch_diff" ]]; then
+				merged_squashed+=("$branch")
+				continue
+			fi
+
+			# Use patch-id to detect squashed commits
+			local has_unique_changes=false
+			local branch_commits=$(git log "$merge_base..$branch" --pretty=format:'%H')
+
+			if [[ -n "$branch_commits" ]]; then
+				local branch_patches=$(echo "$branch_commits" | while read commit; do
+					git show "$commit" 2>/dev/null | git patch-id 2>/dev/null | cut -d' ' -f1
+				done | sort -u)
+
+				local main_patches=$(git log "origin/$main_branch" --max-count=100 --pretty=format:'%H' | while read commit; do
+					git show "$commit" 2>/dev/null | git patch-id 2>/dev/null | cut -d' ' -f1
+				done | sort -u)
+
+				for patch in $branch_patches; do
+					if ! echo "$main_patches" | grep -qx "$patch"; then
+						has_unique_changes=true
+						break
+					fi
+				done
+			fi
+
+			if $has_unique_changes; then
+				deleted_remote+=("$branch")
+			else
+				merged_squashed+=("$branch")
+			fi
+		fi
+	done
+
+	# Display results
+	echo ""
+	if [[ ${#merged_directly[@]} -gt 0 ]]; then
+		echo "✓ Merged directly (${#merged_directly[@]} branches):"
+		printf '  %s\n' "${merged_directly[@]}"
+	fi
+
+	if [[ ${#merged_squashed[@]} -gt 0 ]]; then
+		echo "✓ Merged via squash/rebase (${#merged_squashed[@]} branches):"
+		printf '  %s\n' "${merged_squashed[@]}"
+	fi
+
+	if [[ ${#deleted_remote[@]} -gt 0 ]]; then
+		echo ""
+		echo "⚠ Deleted on remote but has unique local changes (${#deleted_remote[@]} branches):"
+		printf '  %s\n' "${deleted_remote[@]}"
+		echo "  (Review manually - may have work you want to keep)"
+	fi
+
+	# Combine safe-to-delete branches
+	local -a safe_to_delete=("${merged_directly[@]}" "${merged_squashed[@]}")
+
+	if [[ ${#safe_to_delete[@]} -eq 0 ]]; then
+		echo ""
+		echo "No branches to clean up!"
+		return 0
+	fi
+
+	echo ""
+	echo "Safe to delete: ${#safe_to_delete[@]} branches"
+
+	if $dry_run; then
+		echo "(Dry run - no changes made)"
+		return 0
+	fi
+
+	echo ""
+	read -p "Delete these branches? (y/N) " -n 1 -r
+	echo
+	if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+		echo "Cancelled"
+		return 1
+	fi
+
+	# Delete branches
+	local deleted=0
+	for branch in "${safe_to_delete[@]}"; do
+		if git branch -D "$branch" &>/dev/null; then
+			echo "  ✓ $branch"
+			((deleted++))
+		else
+			echo "  ✗ $branch (failed)"
+		fi
+	done
+
+	echo ""
+	echo "Deleted $deleted of ${#safe_to_delete[@]} branches"
+}
+
+show_help() {
+	cat <<'EOF'
+clean-branches - Comprehensive git branch cleanup
+
+Detects and removes local branches that have been merged to main via:
+  - Regular merge (--no-ff, fast-forward)
+  - Squash merge (GitHub default)
+  - Rebase merge
+
+USAGE:
+  clean-branches [options]
+
+OPTIONS:
+  --dry-run, -n          Preview only, don't delete branches
+  --main NAME, -m NAME   Use NAME as main branch (default: main)
+  --help, -h             Show this help
+
+EXAMPLES:
+  clean-branches --dry-run       # Preview what would be deleted
+  clean-branches                 # Interactive delete
+  clean-branches develop         # Use 'develop' as main branch
+  clean-branches -m develop -n   # Dry run with custom main
+
+GITHUB WORKFLOW:
+  After merging a PR with "Squash and merge":
+    1. GitHub auto-deletes remote branch
+    2. Run: clean-branches
+    3. Local stale branch is detected and removed
+
+DETECTION:
+  - Merged directly: git merge-base --is-ancestor
+  - Squash merged: git patch-id comparison (last 100 commits)
+  - Warns about branches with unique local changes
+EOF
+}
+
+# Run main function
+main "$@"

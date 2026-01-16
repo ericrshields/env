@@ -5,4 +5,12 @@
 # Use for WSL-specific settings (Windows interop, display, paths, etc.)
 
 # Add SSH keys to local keychain
-eval $(keychain --eval --agents ssh ~/.ssh/github-ed25519)
+# Only run keychain if not already initialized in this session
+if [ -z "$KEYCHAIN_INITIALIZED" ]; then
+    # First run: Initialize keychain (will show output once)
+    eval $(keychain --eval --agents ssh --quiet ~/.ssh/github-ed25519 2>/dev/null)
+    export KEYCHAIN_INITIALIZED=1
+else
+    # Already initialized: Just source the cached environment variables silently
+    [ -f ~/.keychain/${HOSTNAME}-sh ] && source ~/.keychain/${HOSTNAME}-sh 2>/dev/null
+fi

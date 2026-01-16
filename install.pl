@@ -29,9 +29,6 @@ my $sub_repo_dir = "env-sub";
 push @sub_repos,
 	'https://github.com/shannonmoeller/hosts.git',
 	'https://github.com/shannonmoeller/up.git',
-	'https://github.com/shannonmoeller/bulk.git',
-	'https://github.com/vim-scripts/Colortest.git',
-    'https://github.com/coldcandor/extract.git',
 	'git@github.com:ericrshields/gitprompt.git';
 #	'https://github.com/synacor/gitprompt.git'  //backup repo
 #	'https://github.com/somegithubuser/env.git';  //backup repo
@@ -41,12 +38,7 @@ push @sub_repos,
 push @link_source,
 	"$home/$sub_repo_dir/hosts/hosts.sh",
 	"$home/$sub_repo_dir/up/up.sh",
-	"$home/$sub_repo_dir/bulk/bulk.sh",
-	"$home/$sub_repo_dir/Colortest/colortest",
-	"$home/$sub_repo_dir/extract/extract.bash",
 	"$home/$sub_repo_dir/gitprompt/gitprompt.pl",
-    "$home/$repo_dir/git/completion.bash",
-    "$home/$repo_dir/tree/tree.sh",
 
 	"$home/$repo_dir/git/config",
 	"$home/$repo_dir/git/ignore",
@@ -68,12 +60,7 @@ push @link_source,
 push @link_dest,
 	"$bin/hosts",
 	"$bin/up.sh",
-	"$bin/bulk",
-	"$bin/colortest",
-	"$bin/extract",
 	"$bin/gitprompt.pl",
-    "$bin/git-completion.sh",
-    "$bin/tree",
 
 	"$home/.gitconfig",
 	"$home/.gitignore",
@@ -139,6 +126,77 @@ if ($projects ne "none") {
 		print "Created .env-marker-project-$project marker file\n";
 	}
 }
+
+# Install recommended packages
+print "\n--- Checking for recommended packages ---\n";
+
+# Detect package manager
+my $pkg_manager = "";
+my $install_cmd = "";
+my @pkg_check_cmd = ();
+
+if (-e "/usr/bin/apt" || -e "/usr/bin/apt-get") {
+	$pkg_manager = "apt";
+	$install_cmd = "sudo apt install -y";
+	@pkg_check_cmd = ("dpkg", "-l");
+} elsif (-e "/usr/bin/yum") {
+	$pkg_manager = "yum";
+	$install_cmd = "sudo yum install -y";
+	@pkg_check_cmd = ("rpm", "-q");
+} else {
+	print "Could not detect package manager (apt or yum). Skipping package installation.\n";
+	goto SKIP_PACKAGES;
+}
+
+print "Detected package manager: $pkg_manager\n";
+
+# Define recommended packages (with descriptions)
+my %packages = (
+	"tree" => "Directory tree viewer (replaces legacy shell script)",
+	"dtrx" => "Intelligent archive extractor (replaces legacy extract script)",
+);
+
+# Check which packages are missing
+my @missing_packages = ();
+foreach my $pkg (keys %packages) {
+	my $installed = 0;
+	if ($pkg_manager eq "apt") {
+		$installed = (system("dpkg -l $pkg 2>/dev/null | grep -q '^ii'") == 0);
+	} elsif ($pkg_manager eq "yum") {
+		$installed = (system("rpm -q $pkg >/dev/null 2>&1") == 0);
+	}
+
+	if ($installed) {
+		print "  ✓ $pkg is already installed\n";
+	} else {
+		print "  ✗ $pkg is NOT installed - $packages{$pkg}\n";
+		push @missing_packages, $pkg;
+	}
+}
+
+# Install missing packages if any
+if (@missing_packages) {
+	print "\nMissing packages: " . join(", ", @missing_packages) . "\n";
+	if (&promptUser("Would you like to install these packages now?", "yes") eq "yes") {
+		my $packages_str = join(" ", @missing_packages);
+		print "Running: $install_cmd $packages_str\n";
+		my $result = system("$install_cmd $packages_str");
+		if ($result == 0) {
+			print "Successfully installed packages!\n";
+		} else {
+			print STDERR "Warning: Package installation failed with exit code $result\n";
+			print STDERR "You can install manually later with: $install_cmd $packages_str\n";
+		}
+	} else {
+		print "Skipping package installation. You can install manually later with:\n";
+		print "  $install_cmd " . join(" ", @missing_packages) . "\n";
+	}
+} else {
+	print "All recommended packages are already installed!\n";
+}
+
+SKIP_PACKAGES:
+print "\n";
 
 # Clone subrepos
 for my $i (@sub_repos) {

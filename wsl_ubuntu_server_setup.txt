@@ -12,6 +12,10 @@ Setup WSL and install Ubuntu
     Create username and password (pick something you can type when needed for sudo)
     "sudo apt update" (Updates package lists - may take a while)
     "sudo apt full-upgrade"
+    Useful tools to install: "sudo apt install tree dtrx"
+        tree: Modern directory tree viewer (replaces legacy shell script)
+        dtrx: Intelligent archive extractor (replaces legacy extract script)
+        Note: git bash-completion is included with git package automatically
 
 Set up SSH
     Copy SSH key to ~/.ssh/

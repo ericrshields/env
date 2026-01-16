@@ -4,6 +4,7 @@ To set up CentOs:
 	Make sure to turn on network config and set up a user.  Additional packages selected don't seem to accomplish anything
 	sudo yum install epel-release && sudo yum update
 	sudo yum install vim tree git httpd php php-mcrypt unzip ack screen
+	Note: tree package replaces legacy shell script, dtrx available in EPEL for archive extraction
 	Install env repo (git@github.com:/coldcandor/env.git)
 		cd env && perl install.pl (follow the prompts)
 		restart terminal

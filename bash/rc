@@ -6,6 +6,7 @@
 
 # Preferences
 # @author smoeller
+# export VERBOSE_ENV_LOADING="true"
 export EDITOR='vim -O'
 export HISTSIZE=10000
 export HISTTIMEFORMAT='%F %T '
@@ -27,10 +28,6 @@ else
 fi
 
 # Utilities
-if [[ -f ~/bin/git-completion.sh ]]; then
-    [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: ~/bin/git-completion.sh"
-    . ~/bin/git-completion.sh && complete -o default -o nospace -F _git g gb
-fi
 if [[ -f ~/bin/up.sh ]]; then
     [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: ~/bin/up.sh"
     . ~/bin/up.sh && complete -o bashdefault -o default -o filenames -o nospace -F _up cup sup
@@ -40,7 +37,6 @@ fi
 	# Git aliases
 	# @author smoeller
 	alias g='git'
-	alias gb='bulk -1 git'
 	# @author mcanz
 	alias gs="g status"
 	alias gco="g checkout"

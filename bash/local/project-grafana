@@ -13,3 +13,16 @@ export GF_DEFAULT_APP_MODE=development
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
+# Conditionally load work-specific SSH config
+# Only when: work marker exists AND NOT on cloud
+if [[ -f ~/env/.env-marker-work ]] && [[ ! -f ~/env/.env-marker-cloud ]]; then
+    # Ensure SSH config directory exists
+    mkdir -p ~/.ssh/config.d
+
+    # Symlink work+grafana SSH config if not already present
+    if [[ ! -L ~/.ssh/config.d/work-grafana ]] && [[ ! -f ~/.ssh/config.d/work-grafana ]]; then
+        ln -s ~/env/ssh/local/config-work-grafana ~/.ssh/config.d/work-grafana 2>/dev/null
+        [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Linked: ~/.ssh/config.d/work-grafana"
+    fi
+fi

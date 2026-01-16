@@ -1,1 +1,5 @@
+# Base SSH configuration
 ForwardAgent yes
+
+# Include conditional configs (loaded by layered bash configuration)
+Include ~/.ssh/config.d/*

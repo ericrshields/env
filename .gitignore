@@ -2,3 +2,7 @@
 nul
 *.iml
 .env-marker-*
+
+# Ignore conditional SSH configs (work-specific)
+ssh/local/*
+!ssh/local/README.md

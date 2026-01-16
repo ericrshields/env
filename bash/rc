@@ -2,7 +2,6 @@
 
 # Source global definitions
 [[ -f /etc/bashrc ]] && . /etc/bashrc
-[[ -f /etc/init.d/functions ]] && . /etc/init.d/functions
 
 # Preferences
 # @author smoeller
@@ -28,9 +27,20 @@ else
 fi
 
 # Utilities
-if [[ -f ~/bin/up.sh ]]; then
+# Check modern ~/.local/bin first, fall back to legacy ~/bin for backwards compatibility
+if [[ -f ~/.local/bin/git-completion.sh ]]; then
+    [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: ~/.local/bin/git-completion.sh"
+    . ~/.local/bin/git-completion.sh && complete -o default -o nospace -F _git g gb
+elif [[ -f ~/bin/git-completion.sh ]]; then
+    [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: ~/bin/git-completion.sh"
+    . ~/bin/git-completion.sh && complete -o default -o nospace -F _git g gb
+fi
+if [[ -f ~/.local/bin/up.sh ]]; then
+    [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: ~/.local/bin/up.sh"
+    . ~/.local/bin/up.sh && complete -o bashdefault -o default -o filenames -o nospace -F _up up
+elif [[ -f ~/bin/up.sh ]]; then
     [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Loading: ~/bin/up.sh"
-    . ~/bin/up.sh && complete -o bashdefault -o default -o filenames -o nospace -F _up cup sup
+    . ~/bin/up.sh && complete -o bashdefault -o default -o filenames -o nospace -F _up up
 fi
 
 # Aliases
@@ -38,105 +48,43 @@ fi
 	# @author smoeller
 	alias g='git'
 	# @author mcanz
-	alias gs="g status"
-	alias gco="g checkout"
-	alias gci="g commit"
-	alias glg="g log -n 20 --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %an' --abbrev-commit --date=relative"
+	alias gs='git status'
+	alias gco='git checkout'
+	alias gci='git commit'
+	alias glg="git log -n 20 --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset %an' --abbrev-commit --date=relative"
 	# @author dellis
-	alias gdw="g diff --word-diff=color --word-diff-regex=."
+	alias gdw='git diff --word-diff=color --word-diff-regex=.'
 	# @author eshields
-	alias gl="g log -n 20 --no-merges --abbrev-commit --abbrev=9"
-	alias gll="g log --pretty=full"
-	alias gu="gb fetch origin; gb pull"
-	alias gucd="gb fetch cd-projects; gb pull"
-	alias apache_config="sudo cp ~/env/not_symlinked/httpd/sites/* /etc/httpd/conf.d/ && sudo cp ~/env/not_symlinked/httpd/httpd.conf /etc/httpd/conf/httpd.conf && sudo systemctl restart httpd"
-	alias addkey="eval \"$(ssh-agent -s)\" && ssh-add "
+	alias gl='git log -n 20 --no-merges --abbrev-commit --abbrev=9'
+	alias gll='git log --pretty=full'
+
+	# SSH agent helper
+	alias addssh='eval "$(ssh-agent -s)" && ssh-add'
 
 	# Sets all directories (and files with execute bit originally set) to 755 and all other files to 644
 	# author http://superuser.com/a/91966
-	alias default_permissions="sudo chmod -R u+rwX,go+rX,go-w"
+	alias default_permissions='sudo chmod -R u+rwX,go+rX,go-w'
 
 	# Common aliases
 	# @author smoeller
-	alias ha='history | ack'
 	alias l='ls -AFh --color'
-	alias ll='l -l'
-	alias lx='ll -XB'
-	alias mkdir='mkdir -p'
-	alias pa='ps aux | ack'
+	alias ll='ls -AFh --color -l'
 	alias vi='vim'
 	# @author eshields
-	alias rm='rm -r'
 	alias sudo='sudo '
-	alias addssh='eval "$(ssh-agent -s)" && ssh-add '
 
 # Functions
-	# Search for a directory (fd) or file (ff) matching a given regex
-	# Allows a second parameter for defining options for find
+	# Search for a directory or file matching a given regex
+	# Renamed from fd/ff to avoid conflict with modern fd tool
+	# Use modern 'fd' tool instead: fd -t d "pattern"
 	# @author smoeller/eshields
-	fd() { find $2 . ! -readable -prune -o -regextype posix-extended -iregex ".*($1)[^/]*" -type d -print | grep -v '\.[git|swp]$'; }
-	ff() { find $2 . ! -readable -prune -o -regextype posix-extended -iregex ".*($1)[^/]*" \( -type f -or -type l \) -print | grep -v '\.swp$'; }
+	finddir() { find ${2:-.} ! -readable -prune -o -regextype posix-extended -iregex ".*($1)[^/]*" -type d -print | grep -v '\.[git|swp]$'; }
+	findfile() { find ${2:-.} ! -readable -prune -o -regextype posix-extended -iregex ".*($1)[^/]*" \( -type f -or -type l \) -print | grep -v '\.swp$'; }
 
-	# Move a file and create the new path if it doesn't already exist
-	# @TODO Needs a fix for the case of renaming a directory - it places the existing one into the newly-named one
-	# @param $1 file to move
-	# @param $2 destination
-	# @author Stackoverflow/eshields
-#	mv()
-#	{
-#		DIR=`echo $2 | sed -e 's_/[^/]*$__'`;
-#		mkdir -p $DIR;
-#		/bin/mv $1 $DIR;
-#	}
-#	cp()
-#	{
-#		DIR=`echo $2 | sed -e 's_/[^/]*$__'`;
-#		mkdir -p $DIR;
-#		/bin/cp -r $1 $DIR;
-#	}
-
-	# Git log search
-	# Based on the following being set in .gitconfig:
-	# [format]
-	#		pretty = format:%h %Cblue %ci %Cgreen %an %Creset %s
-	#
-	# @author eshields
-	logs()
-	{
-		git log --no-merges --abbrev-commit --abbrev=9 | grep "$1" --color=always;
-	}
-
-	# Delete a git tag, locally and on origin
-	# @author eshields
-	remove_tag()
-	{
-		git tag -d $1;
-		git push origin :refs/tags/$1;
-	}
-
-	# Start/Stop mysql instances
-	# @author ezarko/eshields
-	sqltoggle()
-	{
-		for i in /etc/init.d/mysqld-*; do sudo $i $1; done
-	}
-
-	# Use to remove files matching $1 from the search for $2 in folders designated by $3
-	# Great for things like avoiding matching .packed files in agdistis
-	# @author eshields/smoeller
-	ackfilter()
-	{
-		ack -G "$1" --invert-file-match "$2" $3
-	}
-
-	# Use to replace all occurances of $1 with $2 in the current working directory, recursively.
-	# Uses '@' as a regex delimiter, so searches including that symbol won't work.
-	# @param $1 String to search for
-	# @param $2 String to replace with
-	# @author eshields
-	replace()
-	{
-		ack -l $1 | xargs -n 1 sed -i s@$1@$2@g
+	# Git log search - uses native git grep for efficiency
+	# @author eshields (modernized)
+	logs() {
+		git log --no-merges --abbrev-commit --abbrev=9 --grep="$1" --color=always
 	}
 
 	# Git-less method of determining current branch for all repos (uses .gitpgd exclusions)
@@ -146,8 +94,7 @@ fi
 
 	# Remove local and publish/ branches that are fully merged to main
 	# @author http://devblog.springest.com/a-script-to-remove-old-git-branches (modified)
-	clean_branches()
-	{
+	clean_branches() {
 		git checkout main
 		git fetch origin
 
@@ -172,6 +119,20 @@ fi
 		local ORIG_FUNC=$(declare -f $1)
 		local NEWNAME_FUNC="$2${ORIG_FUNC#$1}"
 		eval "$NEWNAME_FUNC"
+	}
+
+	# Show Claude Code session information for all directories
+	# Rewritten to use jq for proper JSON parsing
+	# @author eshields (modernized)
+	claude-sessions() {
+		for dir in ~/.claude/projects/*; do
+			if [[ -f "$dir/sessions-index.json" ]]; then
+				echo "Project: $(jq -r '.projectPath // "unknown"' "$dir/sessions-index.json" 2>/dev/null || echo "error parsing")"
+				echo "Sessions: $(jq '[.sessions // []] | length' "$dir/sessions-index.json" 2>/dev/null || echo "error")"
+				echo "Last modified: $(stat -c %y "$dir" | cut -d'.' -f1)"
+				echo ""
+			fi
+		done
 	}
 
 # Environment-based settings - layered configuration system

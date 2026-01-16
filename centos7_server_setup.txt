@@ -3,7 +3,8 @@ To set up CentOs:
 	Use Rufus to create a bootable USB
 	Make sure to turn on network config and set up a user.  Additional packages selected don't seem to accomplish anything
 	sudo yum install epel-release && sudo yum update
-	sudo yum install vim tree git httpd php php-mcrypt unzip ack screen
+	sudo yum install vim tree git httpd php php-mcrypt unzip ack screen jq ripgrep fd-find bat
+	sudo snap install yq  (YAML processor - similar to jq but for YAML files)
 	Note: tree package replaces legacy shell script, dtrx available in EPEL for archive extraction
 	Install env repo (git@github.com:/coldcandor/env.git)
 		cd env && perl install.pl (follow the prompts)

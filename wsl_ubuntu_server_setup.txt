@@ -17,6 +17,18 @@ Setup WSL and install Ubuntu
         dtrx: Intelligent archive extractor (replaces legacy extract script)
         Note: git bash-completion is included with git package automatically
 
+Install essential CLI tools
+    "sudo apt install jq ripgrep fd-find bat"
+        jq       - JSON processor for working with JSON files/APIs
+        ripgrep  - Fast grep alternative (command: rg) - 10-100x faster than grep
+        fd-find  - Fast find alternative (command: fdfind) - simpler syntax, respects .gitignore
+        bat      - cat with syntax highlighting (command: batcat)
+    "sudo snap install yq"  (YAML processor - similar to jq but for YAML files)
+    Create symlinks for Ubuntu-specific naming:
+        "mkdir -p ~/.local/bin"
+        "ln -sf $(which fdfind) ~/.local/bin/fd"
+        "ln -sf $(which batcat) ~/.local/bin/bat"
+
 Set up SSH
     Copy SSH key to ~/.ssh/
     Start ssh process: eval $(ssh-agent)

@@ -17,8 +17,9 @@ my @link_dest;
 my $repo = 'git@github.com:ericrshields/env.git';
 
 # Home and bin for symlinks
+# Using ~/.local/bin as per XDG Base Directory Specification (modern standard)
 my $home = <~>;
-my $bin = <~/bin>;
+my $bin = <~/.local/bin>;
 
 # Installs the core repo at $home/$repo_dir
 my $repo_dir = "env";

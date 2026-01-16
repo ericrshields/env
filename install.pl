@@ -220,11 +220,14 @@ for my $i (@link_source) {
 	my $dest = $link_dest[$count];
 	$count++;
 
-	# Backup existing file
-	if (-e $dest || -l $dest) {
+	# Backup existing file (but not symlinks)
+	if (-e $dest && !-l $dest) {
 		my $time = time();
 		system("mv $dest $dest~$time") == 0
 			or print STDERR "Attempt to rename existing file $dest failed: $?\n";
+	} elsif (-l $dest) {
+		# Remove existing symlink without backing up
+		unlink($dest) or print STDERR "Attempt to remove existing symlink $dest failed: $!\n";
 	}
 
 	# Create new symlink

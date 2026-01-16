@@ -1,0 +1,9 @@
+# SSH config for work + grafana project (not cloud)
+# Loaded conditionally via layered configuration system
+
+Host dev-cloud
+    ProxyCommand sh -c "aws ssm start-session --target i-031ee3434331a6455 --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
+    User ubuntu
+	IdentityFile ~/.ssh/eshields-aws-us-west-2.pem
+	ServerAliveInterval 60
+	ForwardAgent yes

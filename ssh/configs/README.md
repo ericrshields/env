@@ -1,12 +1,12 @@
-# SSH Local Configurations
+# SSH Conditional Configurations
 
-This directory contains SSH configurations that are conditionally loaded based on environment markers.
+This directory contains **versioned** SSH configurations that are conditionally loaded based on environment markers.
 
 ## How It Works
 
 1. Base SSH config (`ssh/config`) includes `~/.ssh/config.d/*`
-2. Conditional configs are stored here in `ssh/local/`
-3. The layered bash configuration system creates symlinks to `~/.ssh/config.d/` when conditions are met
+2. Conditional configs are **versioned here** in `ssh/configs/`
+3. The layered bash configuration system creates symlinks from `~/.ssh/config.d/` to configs here when conditions are met
 
 ## Current Configurations
 
@@ -24,7 +24,7 @@ This directory contains SSH configurations that are conditionally loaded based o
 
 ## Adding New Conditional Configs
 
-1. Create a new file in `ssh/local/config-<conditions>`
+1. Create a new file in `ssh/configs/config-<name>` (versioned in git)
 2. Add conditional symlinking logic in the appropriate bash config layer:
    - Context-specific: `bash/local/context-work` or `context-home`
    - Environment-specific: `bash/local/environment-wsl` or `environment-cloud`
@@ -33,16 +33,22 @@ This directory contains SSH configurations that are conditionally loaded based o
    ```bash
    if [[ <conditions> ]]; then
        mkdir -p ~/.ssh/config.d
-       if [[ ! -L ~/.ssh/config.d/<name> ]] && [[ ! -f ~/.ssh/config.d/<name> ]]; then
-           ln -s ~/env/ssh/local/config-<name> ~/.ssh/config.d/<name> 2>/dev/null
+       if [[ ! -L ~/.ssh/config.d/<name> ]]; then
+           ln -sf ~/env/ssh/configs/config-<name> ~/.ssh/config.d/<name>
            [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Linked: ~/.ssh/config.d/<name>"
        fi
    fi
    ```
 
+## Secret Configs
+
+If you have configs with secrets (private keys, sensitive hostnames):
+- Place them directly in `~/.ssh/config.d/` (unversioned)
+- They'll still be loaded by SSH via the Include directive
+
 ## Why This Pattern?
 
-- Keeps work-specific configs out of the public repo (ssh/local/ is gitignored)
-- Maintains clean git status (no dirty index files)
-- Automatically adapts SSH config based on environment
+- Configs are versioned and sync across machines
+- Automatically adapts SSH config based on environment markers
 - Easy to understand and maintain with clear conditional logic
+- Supports both versioned and secret configs

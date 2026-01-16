@@ -8,7 +8,30 @@ To set up CentOs:
 	Install env repo (git@github.com:/coldcandor/env.git)
 		cd env && perl install.pl (follow the prompts)
 		restart terminal
-		
+
+Optional: Migrate to Modern Prompt (Starship)
+	Note: The install.pl script sets up gitprompt.pl by default, but modern alternatives are faster.
+	See docs/gitprompt-performance-analysis.md for detailed performance comparison.
+
+	Install Starship (recommended for most users):
+		curl -sS https://starship.rs/install.sh | sh
+		Follow the prompts (installs to /usr/local/bin/starship)
+
+	Configure Starship in ~/.bashrc:
+		Comment out or remove the gitprompt PROMPT_COMMAND section (lines 24-28 in bash/rc)
+		Add at the end of ~/.bashrc: eval "$(starship init bash)"
+		source ~/.bashrc
+
+	Optional: Customize Starship prompt
+		mkdir -p ~/.config && starship preset nerd-font-symbols > ~/.config/starship.toml
+		Edit ~/.config/starship.toml to customize appearance
+		See: https://starship.rs/config/
+
+	Alternative for Zsh users: Powerlevel10k
+		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+		Add to ~/.zshrc: source ~/powerlevel10k/powerlevel10k.zsh-theme
+		Run configuration wizard: p10k configure
+
 To set up webserver:
 	sudo mkdir /public_html && sudo chown eshields:eshields /public_html
 	git clone git@github.com:/coldcandor/website.git /public_html/www.coldcandor.com

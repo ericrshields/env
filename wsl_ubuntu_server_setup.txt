@@ -36,6 +36,32 @@ Setup env
     Clone desired repos into projects dir (don't forget to re-add the ssh key to the ring)
     Sometimes the .ssh files will have permissions altered. Reset with "chmod 600 ~/.ssh/<key file>"
 
+Optional: Migrate to Modern Prompt (Starship)
+    Note: The install.pl script sets up gitprompt.pl by default, but modern alternatives are faster.
+    See docs/gitprompt-performance-analysis.md for detailed performance comparison.
+
+    Install Starship (recommended for most users):
+        "curl -sS https://starship.rs/install.sh | sh"
+        Follow the prompts (installs to /usr/local/bin/starship)
+
+    Configure Starship in ~/.bashrc:
+        Comment out or remove the gitprompt PROMPT_COMMAND section (lines 24-28 in bash/rc)
+        Add at the end of ~/.bashrc: eval "$(starship init bash)"
+
+    Optional: Customize Starship prompt
+        Create config: "mkdir -p ~/.config && starship preset nerd-font-symbols > ~/.config/starship.toml"
+        Edit ~/.config/starship.toml to customize appearance
+        See: https://starship.rs/config/
+
+    Test performance:
+        "cd ~/projects/grafana && time git status"
+        Should be ~50ms (faster than gitprompt.pl's ~68ms)
+
+    Alternative for Zsh users: Powerlevel10k
+        "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k"
+        Add to ~/.zshrc: source ~/powerlevel10k/powerlevel10k.zsh-theme
+        Run configuration wizard: "p10k configure"
+
 Install node, nvm, and npm
     Install nvm via curl command: https://github.com/nvm-sh/nvm/blob/master/README.md#installing-and-updating
     Refresh the .rc file "source ~/.bashrc"

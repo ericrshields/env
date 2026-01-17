@@ -14,9 +14,11 @@
 
 # Move auth socket to known place so SSH forwarding works in tmux after connection interrupt
 # @author http://superuser.com/a/424588/541446
-if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
-    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/agent.socket
-fi
-export SSH_AUTH_SOCK=~/.ssh/agent.socket
+# NOTE: Commented out in favor of keychain managing SSH agent on WSL
+# This approach is still useful on remote servers where you SSH with forwarding
+#if [ -S "$SSH_AUTH_SOCK" ] && [ ! -h "$SSH_AUTH_SOCK" ]; then
+#    ln -sf "$SSH_AUTH_SOCK" ~/.ssh/agent.socket
+#fi
+#export SSH_AUTH_SOCK=~/.ssh/agent.socket
 # If tmux session exists and there is an interactive terminal, attach to tmux (or create new session if none exists)
 #if [ -z "$TMUX" ] && [[ -t 0 || -p /dev/stdin ]]; then tmux attach -t work || tmux new-session -s work; fi

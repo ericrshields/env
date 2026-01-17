@@ -58,9 +58,6 @@ fi
 	alias gl='git log -n 20 --no-merges --abbrev-commit --abbrev=9'
 	alias gll='git log --pretty=full'
 
-	# SSH agent helper
-	alias addssh='eval "$(ssh-agent -s)" && ssh-add'
-
 	# Sets all directories (and files with execute bit originally set) to 755 and all other files to 644
 	# author http://superuser.com/a/91966
 	alias default_permissions='sudo chmod -R u+rwX,go+rX,go-w'

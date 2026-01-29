@@ -1,7 +1,1 @@
-{
-  "permissions": {
-    "allow": [
-      "WebFetch(domain:claude.ai)"
-    ]
-  }
-}
+/home/eshields/.ai-context-store/proj-env/settings.local.json

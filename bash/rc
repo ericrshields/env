@@ -129,6 +129,11 @@ if [[ -f ~/.bash_local ]]; then
     _env_load ~/.bash_local
 fi
 
+# Secrets layer: API tokens and credentials (never version this file!)
+if [[ -f ~/.secrets ]]; then
+    _env_load ~/.secrets
+fi
+
 # Context layer: Work or Home (home is default)
 if [[ -f ~/env/.env-marker-work ]]; then
     if [[ -f ~/env/bash/local/context-work ]]; then

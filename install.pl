@@ -54,7 +54,8 @@ push @link_source,
 #	"$home/$repo_dir/intellij/settings.jar",
 
 	"$home/$repo_dir/ssh/config",
-	"$home/$repo_dir/ssh/authorized_keys";
+	"$home/$repo_dir/ssh/authorized_keys",
+	"$home/$repo_dir/scripts";
 
 # Symlink destinations
 push @link_dest,
@@ -75,7 +76,8 @@ push @link_dest,
 #	"$home/.IntelliJIdea2022.3/config/settings.jar", # Currently using Intellij acct to store settings
 
 	"$home/.ssh/config",
-	"$home/.ssh/authorized_keys";
+	"$home/.ssh/authorized_keys",
+	"$bin/scripts";
 
 # Setup directories
 # TODO:  Add more verbosity here for non-error cases

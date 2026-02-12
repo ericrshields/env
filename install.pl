@@ -55,6 +55,7 @@ push @link_source,
 
 	"$home/$repo_dir/ssh/config",
 	"$home/$repo_dir/ssh/authorized_keys",
+	"$home/$repo_dir/tmux/conf",
 	"$home/$repo_dir/scripts";
 
 # Symlink destinations
@@ -77,6 +78,7 @@ push @link_dest,
 
 	"$home/.ssh/config",
 	"$home/.ssh/authorized_keys",
+	"$home/.tmux.conf",
 	"$bin/scripts";
 
 # Setup directories

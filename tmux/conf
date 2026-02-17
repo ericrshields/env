@@ -10,6 +10,9 @@ setw -g window-status-current-format "#[bg=brightyellow]#[fg=black] #I #W "  # F
 setw -g window-status-format "#[fg=brightyellow] #I #W "  # Format for inactive windows (yellow text)
 
 # Key Bindings
+set -g prefix C-a  # Change prefix from Ctrl+b to Ctrl+a
+unbind C-b  # Free the old prefix
+bind C-a send-prefix  # Ctrl+a twice sends literal Ctrl+a
 setw -g mode-keys vi  # Use vi-style navigation in copy mode
 # WASD pane navigation (Ctrl+b then w/a/s/d)
 bind w select-pane -U  # Up
@@ -54,5 +57,14 @@ set -g history-limit 50000  # Large scrollback buffer for checking logs
 setw -g aggressive-resize on  # Resize window to smallest active client viewing it
 
 # Process Management
-bind x kill-pane  # Ctrl+b x: Kill pane without confirmation
-bind r source-file ~/.tmux.conf \; display "Reloaded!"  # Ctrl+b r: Reload tmux config
+bind x kill-pane  # Ctrl+a x: Kill pane without confirmation
+bind r source-file ~/.tmux.conf \; display "Reloaded!"  # Ctrl+a r: Reload tmux config
+
+# Plugins (via TPM - https://github.com/tmux-plugins/tpm)
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-resurrect'  # Save/restore sessions: Ctrl+a Ctrl+s / Ctrl+a Ctrl+r
+set -g @plugin 'tmux-plugins/tmux-continuum'   # Auto-save every 15 minutes
+set -g @continuum-restore 'on'  # Auto-restore last saved session on tmux start
+
+# TPM must be the last line
+run '~/.tmux/plugins/tpm/tpm'

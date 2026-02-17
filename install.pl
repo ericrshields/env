@@ -30,7 +30,8 @@ my $sub_repo_dir = "env-sub";
 push @sub_repos,
 	'https://github.com/shannonmoeller/hosts.git',
 	'https://github.com/shannonmoeller/up.git',
-	'git@github.com:ericrshields/gitprompt.git';
+	'git@github.com:ericrshields/gitprompt.git',
+	['https://github.com/tmux-plugins/tpm.git', "$home/.tmux/plugins/tpm"];
 #	'https://github.com/synacor/gitprompt.git'  //backup repo
 #	'https://github.com/somegithubuser/env.git';  //backup repo
 #	'https://github.com/mikecanz/env.git';  //Original source
@@ -203,9 +204,15 @@ print "\n";
 
 # Clone subrepos
 for my $i (@sub_repos) {
-	$i =~ /\/(\w+)\.git$/; # Match is saved automatically into $1
-	if (!$1 || !-e "$home/$sub_repo_dir/$1") {
-		system("cd $home/$sub_repo_dir && git clone $i") == 0
+	my $dest;
+	if (ref($i) eq 'ARRAY') {
+		($i, $dest) = @$i;
+	} else {
+		$i =~ /\/(\w+)\.git$/;
+		$dest = "$home/$sub_repo_dir/$1" if $1;
+	}
+	if ($dest && !-e $dest) {
+		system("git clone $i $dest") == 0
 			or print STDERR "Attempt to clone $i failed: $?\n";
 	}
 }

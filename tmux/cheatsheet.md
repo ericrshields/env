@@ -55,6 +55,13 @@ Mouse wheel scroll also enters copy mode automatically.
 
 Continuum auto-saves every 15 minutes and auto-restores on tmux start.
 
+## TPM (Plugin Manager) Setup
+
+1. Clone TPM: `git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm`
+2. Reload config: `prefix + r` (or `tmux source ~/.tmux.conf`)
+3. Install plugins: `prefix + I` (capital I)
+4. Update plugins: `prefix + U` (capital U)
+
 ## Tips
 
 - **Mouse is enabled** — click panes, drag to resize, scroll to view history

@@ -27,10 +27,13 @@ bind Up select-pane -U     # Up
 bind Right select-pane -R  # Right
 
 # Colors
-set -g default-terminal "tmux-256color"  # Enable 256 color support
-set -g pane-active-border-style fg=white  # Active pane border is white
-set -g pane-border-style fg=brightblack  # Inactive pane border is dark gray
-set -g status-style bg=black,fg=white  # Status bar: black background, white text
+set -g default-terminal "tmux-256color"    # Enable 256 color support
+set -g status-style bg=black,fg=white      # Status bar: black background, white text
+# Visually distinct active pane
+set -g pane-active-border-style fg=yellow  # Active pane border is yellow
+set -g pane-border-style fg=brightblack    # Inactive pane border is dark gray
+set -g window-style 'bg=#000000'           # Inactive panes: black
+set -g window-active-style 'bg=#101010'    # Active pane: Subtle grey shift
 
 # Mouse Support
 set -g mouse on  # Enable mouse for pane selection, resizing, and scrolling

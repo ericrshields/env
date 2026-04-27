@@ -1,0 +1,5 @@
+# Neutralize tmux focus event escape sequences so they don't leak into prompts.
+# Fires when tmux has `focus-events on` and Claude Code (or another TUI) loses
+# the sequence during rapid window/pane switches. See anthropics/claude-code#12242.
+"\e[I": ""
+"\e[O": ""

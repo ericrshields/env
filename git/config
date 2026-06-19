@@ -1,6 +1,7 @@
 [user]
 	name = Eric Shields
 	email = me@ericrshields.com
+	signingkey = grafana-gh-signing-key-2026-06.pub
 [branch]
 	autosetupmerge = true
 [color]
@@ -17,8 +18,6 @@
 	pretty = format:%h %Cblue %ci %Cgreen %an %Creset %s
 [alias]
 	aa = add -A
-	ba = !git branch | ack
-	bc = !git branch | sed -n '/^*/s/^* //gp'
 	br = branch
 	bv = branch -avv
 	cl = clean -df
@@ -29,11 +28,6 @@
 	dc = diff --cached
 	lc = log ORIG_HEAD.. --stat --no-merges
 	lg = log --graph --pretty=format:'%C(yellow bold)%h%Creset %s %C(green bold)(%cr)%Creset %an'
-	pl = pull
-	pom = push origin master
-	ra = remote add
-	rr = remote rm
-	rv = remote -v
 	sh = stash
 	sha = stash apply
 	shl = stash list
@@ -43,7 +37,6 @@
 	st = status
 	sub = submodule
 	sw = show --ignore-space-change
-	up = !git pull && git submodule update --init
 	wc = whatchanged
 	ls = !git log --no-merges --abbrev-commit --abbrev=9 | grep "$1" --color=always
 	dag = log --graph --format='format:%C(yellow)%h%C(reset) %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%ar%C(reset)%C(auto)%d%C(reset)%n%s' --date-order

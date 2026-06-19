@@ -10,6 +10,18 @@ export NODE_OPTIONS="--max-old-space-size=10240"
 # Grafana setup
 export GF_DEFAULT_APP_MODE=development
 
+# Load the Grafana commit-signing SSH key into a persistent ssh-agent via keychain.
+# The key is passphrase-protected, so only prompt in interactive shells; every shell
+# (including non-interactive tool shells) then sources the persisted agent env so it
+# can reach the one running agent. This is what lets signed commits work across both
+# interactive terminals and automation on this server.
+if command -v keychain >/dev/null 2>&1; then
+    if [[ $- == *i* ]]; then
+        keychain --quiet --agents ssh ~/.ssh/grafana-gh-signing-key-2026-06
+    fi
+    [ -f ~/.keychain/${HOSTNAME}-sh ] && source ~/.keychain/${HOSTNAME}-sh 2>/dev/null
+fi
+
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
@@ -26,3 +38,12 @@ if [[ -f ~/env/.env-marker-work ]] && [[ ! -f ~/env/.env-marker-cloud ]]; then
         [[ "$VERBOSE_ENV_LOADING" == "true" ]] && echo "Linked: ~/.ssh/config.d/work-grafana"
     fi
 fi
+
+# Google Cloud SDK (used by deployment_tools scripts)
+if [ -f '/home/ubuntu/google-cloud-sdk/path.bash.inc' ]; then . '/home/ubuntu/google-cloud-sdk/path.bash.inc'; fi
+if [ -f '/home/ubuntu/google-cloud-sdk/completion.bash.inc' ]; then . '/home/ubuntu/google-cloud-sdk/completion.bash.inc'; fi
+
+# deployment_tools gcom scripts
+export PATH="$HOME/projects/deployment_tools/scripts/gcom:$PATH"
+source <(gcom --autocompletion=bash)
+source <(gcom-dev --autocompletion=bash)

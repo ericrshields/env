@@ -5,10 +5,14 @@
 # Use for WSL-specific settings (Windows interop, display, paths, etc.)
 
 # Add SSH keys to local keychain
+# Both keys are loaded so they are available locally AND forwarded to remote
+# hosts (ForwardAgent yes in ~/.ssh/config forwards every agent key):
+#   github-ed25519                  -> GitHub auth / push
+#   grafana-gh-signing-key-2026-06  -> verified commit signing (SSH format)
 # Only run keychain if not already initialized in this session
 if [ -z "$KEYCHAIN_INITIALIZED" ]; then
     # First run: Initialize keychain (will show output once)
-    eval $(keychain --eval --agents ssh --quiet ~/.ssh/github-ed25519 2>/dev/null)
+    eval $(keychain --eval --agents ssh --quiet ~/.ssh/github-ed25519 ~/.ssh/grafana-gh-signing-key-2026-06 2>/dev/null)
     export KEYCHAIN_INITIALIZED=1
 else
     # Already initialized: Just source the cached environment variables silently

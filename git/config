@@ -1,7 +1,11 @@
 [user]
 	name = Eric Shields
 	email = me@ericrshields.com
-	signingkey = grafana-gh-signing-key-2026-06.pub
+	signingkey = ~/.ssh/grafana-gh-signing-key-2026-06.pub
+[gpg]
+	format = ssh
+[commit]
+	gpgsign = true
 [branch]
 	autosetupmerge = true
 [color]

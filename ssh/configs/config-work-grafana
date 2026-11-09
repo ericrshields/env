@@ -10,3 +10,6 @@ Host dev-cloud
     ServerAliveCountMax 3
     StrictHostKeyChecking accept-new
     IPQoS lowdelay throughput
+    LocalForward 3000 localhost:3000
+    LocalForward 3333 localhost:3333
+    ExitOnForwardFailure yes

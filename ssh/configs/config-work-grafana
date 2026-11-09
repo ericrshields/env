@@ -13,3 +13,4 @@ Host dev-cloud
     LocalForward 3000 localhost:3000
     LocalForward 3333 localhost:3333
     ExitOnForwardFailure yes
+    LogLevel ERROR
